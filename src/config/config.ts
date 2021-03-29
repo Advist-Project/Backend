@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import _ from 'lodash'
 
 const envFound  = dotenv.config()
-// ¼Õº¸±â
+
 let config
 
 if (!('error' in envFound)) {
