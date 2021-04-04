@@ -24,7 +24,6 @@ RestClient.setConfig(
 
 app.get("/pay", (req : express.Request , res : express.Response, next : express.NextFunction) => {
        
-       // res.setHeader('Authorization','64ef0d8ffb0c75f1632343df41201673fc692293b22839d0a8f8acc7794ab1ba')
        RestClient.getAccessToken()
        .then(function (response) {
               console.log(response.data.token)
@@ -38,10 +37,10 @@ app.get("/pay", (req : express.Request , res : express.Response, next : express.
                                   console.log(_response);
                                   if (_response.data.price === 2200 && _response.data.status === 1) {
 					// TODO: 이곳이 상품 지급 혹은 결제 완료 처리를 하는 로직으로 사용하면 됩니다.
-                                   console.log("success verify")
+                                          console.log("success verify")
                                    
-				}
-                           }
+				       }
+                            }
                      }).catch((error) => {
                             console.log("1"+ error.message)
                      })
@@ -79,17 +78,7 @@ app.post("/cancel", (req : express.Request , res : express.Response, next : expr
        res.redirect('/')
 })
 app.get("/", (req : express.Request , res : express.Response, next : express.NextFunction) => {
-       RestClient.getAccessToken()
-       .then(function (response) {
-	       // Access Token을 발급 받았을 때
-              
-	       if (response.status === 200) {
-                     console.log(response)
-                     res.send(response.data.token)
-             }
-       }).catch((error) => {
-              console.log("2"+ error.message)
-       })
+       res.send("hi")
 })
  
 
