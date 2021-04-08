@@ -4,12 +4,13 @@ import mongoose from "mongoose"
 import config from './config/config'
 import payRoutes from './routes/pay';
 // cors 등록
-
+ 
 const app = express()
 app.use(express.json())
 mongoose
 .connect(config.mongo.url, config.mongo.options)
 .then((result) => {
+       // console.log(result)
        console.log('connected')
 })
 .catch((error) => {
