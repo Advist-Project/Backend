@@ -1,11 +1,11 @@
 import express from "express";
-import controller1 from "../controllers/bootPay";
-import controller2 from "../controllers/orderReceipt";
+import bootPayController from "../controllers/bootPay";
+import orderReceiptController from "../controllers/orderReceipt";
 
 const router = express.Router();
 
-router.post('/cancel', controller1.payCancel)
-router.get('/checkorder/:userId', controller2.CheckOrder)
-router.get('/verify/:receiptId', controller1.payVerify)
+router.post('/cancel', bootPayController.payCancel)
+router.get('/checkorder/:userId', orderReceiptController.CheckOrder)
+router.get('/verify/:receiptId', bootPayController.payVerify)
 
 export = router;
