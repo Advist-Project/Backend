@@ -1,6 +1,6 @@
-import {Document} from 'mongoose'
+import { Document } from "mongoose"
 
 export default interface Counter extends Document {
-    id : string,
-    seq : number,
+  id: string
+  seq: number
 }
