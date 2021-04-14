@@ -73,6 +73,16 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
                           message: "success cancel"
                         })
                       }
+                      orderReceipt
+                        .findOneAndUpdate({ orderId: orderId }, { $set: { deleteYN: true } }, { new: true })
+                        .then((result) => {
+                          console.log("success update deleteYN")
+                        })
+                        .catch((error) => {
+                          res.status(502).json({
+                            message: error.message
+                          })
+                        })
                     })
                     .catch((error) => {
                       res.status(503).json({
