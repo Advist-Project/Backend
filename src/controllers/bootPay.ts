@@ -25,12 +25,13 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
           message: error.message
         })
       })
+    console.log(realPrice)
     // bootpay accesstoken
     RestClient.getAccessToken()
       .then(function (response) {
         //  Access Token을 발급 받았을 때
         if (response.status === 200 && response.data.token !== undefined) {
-
+          console.log(realPrice)
           //      receiptId 기준으로 검증하기
           RestClient.verify(receiptId)
             .then(function (_response) {
@@ -45,10 +46,7 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
                   })
                   //     맞다면 receiptId를 우리 order collection에 저장
                   orderReceipt
-                    .findOneAndUpdate({
-                      orderId: orderId,
-                      receiptId: receiptId,
-                    })
+                    .findOneAndUpdate({ orderId: orderId }, { $set: { receiptId: receiptId } }, { new: true })
                     .then((result) => {
                       console.log("success update receiptId")
                     })

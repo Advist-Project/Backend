@@ -3,7 +3,7 @@ import OrderReceipt from "../interfaces/orderReceipt"
 
 const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
-  userId: { type: String, required: true },
+  userId: { type: Number, required: true },
   userEmail: { type: String, required: true },
   receiptId: String,
   itemInfo: {

@@ -4,7 +4,7 @@ import getNextSequence from "./counter"
 
 const CheckOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId: String = req.params.userId
+    const userId: Number = parseInt(req.params.userId)
     const itemId: any = req.query.itemId
     const optionId: any = req.query.optionId
     const itemImg: string =
