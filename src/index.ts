@@ -33,8 +33,8 @@ mongoose
   });
   
   // cors 지정
+  app.use(cors({ origin: "https://frontend-git-ympark-advi33.vercel.app", credentials: true }))
   app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
-
   //세션 설정
   app.use(
     session({ 
