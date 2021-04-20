@@ -33,23 +33,12 @@ const CheckOrder = async (req: Request, res: Response, next: NextFunction) => {
       },
       deleteYN: item['deleteYN'],
     })
-    orderReceipt
-      .save()
-      .then((result) => {
-        return res.status(200).json({
-          order_receipts: result,
-        })
-      })
-      .catch((error) => {
-        // 500-> 실패 했다면
-        return res.status(500).json({
-          // message에 에러 메세지를 넣어서 보낸다
-          message: error.message,
-          error,
-        })
-      })
+    await orderReceipt.save()
+    res.status(200).json({
+      order_receipts: orderReceipt,
+    })
   } catch (error) {
-    res.status(501).json({
+    res.status(500).json({
       message: error.message
     })
   }

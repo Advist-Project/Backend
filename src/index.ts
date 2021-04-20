@@ -7,7 +7,7 @@ import itemRoutes from "./routes/item"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 
-// cors 등록
+/// cors 등록
 
 const app = express()
 app.use(express.json())
@@ -36,8 +36,8 @@ mongoDBStore.on("error", () => {
 });
 
 // cors 지정
-app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
-
+// app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
+app.use(cors())
 //세션 설정
 app.use(
   session({
