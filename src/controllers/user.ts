@@ -2,6 +2,7 @@ import User from '../models/user';
 import { IMongoDBUser } from "../interfaces/user";
 import config from '../config/config'
 import passport from 'passport';
+import getNextSequence from './counter';
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const NaverStrategy = require('passport-naver').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
@@ -42,7 +43,9 @@ module.exports = function (app) {
         }
 
         if (!doc) {
+          const userId: any = await getNextSequence("userinfo")
           const newUser = new User({
+            userId: userId,
             googleId: profile.id,
             username: profile.name.givenName,
             email: profile.emails[0].value,
@@ -77,7 +80,9 @@ module.exports = function (app) {
       }
 
       if (!doc) {
+        const userId: any = await getNextSequence("userinfo")
         const newUser = new User({
+          userId: userId,
           kakaoId: profile.id,
           email: profile._json.kakao_account.email,
           username: profile.displayName,
@@ -108,7 +113,9 @@ module.exports = function (app) {
         }
 
         if (!doc) {
+          const userId: any = await getNextSequence("userinfo")
           const newUser = new User({
+            userId: userId,
             naverId: profile.id,
             email: profile.emails[0].value,
             username: profile.displayName,
