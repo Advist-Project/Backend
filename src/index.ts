@@ -7,12 +7,14 @@ import itemRoutes from "./routes/item"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 
-// cors 등록
+/// cors 등록
 
 const app = express()
 app.use(express.json())
-app.set("trust proxy", 1)
-mongoose.connect(config.mongo.url, config.mongo.options)
+
+app.set("trust proxy", 1);
+mongoose
+  .connect(config.mongo.url, config.mongo.options)
   .then((result) => {
     // console.log(result)
     console.log("connected")
