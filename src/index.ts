@@ -37,7 +37,8 @@ mongoDBStore.on("error", () => {
 
 // cors 지정
 // app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
-app.use(cors())
+
+app.use(cors({ origin: "*" }))
 //세션 설정
 app.use(
   session({
