@@ -11,6 +11,7 @@ import ConnectMongoDBSession from "connect-mongodb-session"
 
 const app = express()
 app.use(express.json())
+app.set("trust proxy", 1)
 mongoose.connect(config.mongo.url, config.mongo.options)
   .then((result) => {
     // console.log(result)
