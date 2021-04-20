@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express"
 import OrderReceipt from "../models/orderReceipt"
 import getNextSequence from "./counter"
-
+import getItemToOrderReceipt from "./item"
 const CheckOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: Number = parseInt(req.params.userId)
     const itemId: any = req.query.itemId
+    const item: any = await getItemToOrderReceipt.getItemToOrderReceipt(itemId)
     const optionId: any = req.query.optionId
-    const itemImg: string =
-      "https://www.doctorsnews.co.kr/news/photo/201904/128662_79142_126.jpg"
     const orderId: any = await getNextSequence("orderReceipt")
     const orderReceipt = new OrderReceipt({
       orderId,
@@ -17,21 +16,22 @@ const CheckOrder = async (req: Request, res: Response, next: NextFunction) => {
       // receiptId 나중에 받기
       itemInfo: {
         itemId,
-        itemImg,
-        itemName: "'책에서 삶을 보다'를 공부해보자",
-        itemOwner: "천사",
+        itemImg: item['img'],
+        itemName: item['title'],
+        itemOwner: item['owner'],
+        // 배열이기 때문에 optionId-1
         option: {
           optionId,
-          title: "책에서 삶을 보다",
-          type: "workbook",
-          desc: "demo",
+          title: item['options'][optionId - 1]['title'],
+          type: item['options'][optionId - 1]['type'],
+          desc: item['options'][optionId - 1]['desc'],
           //file,
-          price: 50000,
-          deleteYN: false,
-          discountPrice: 20000,
+          price: item['options'][optionId - 1]['price'],
+          deleteYN: item['options'][optionId - 1]['deleteYN'],
+          discountPrice: item['options'][optionId - 1]['discountPrice'],
         },
       },
-      deleteYN: false,
+      deleteYN: item['deleteYN'],
     })
     orderReceipt
       .save()

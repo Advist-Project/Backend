@@ -8,7 +8,7 @@ const orderReceiptSchema: Schema = new Schema({
   receiptId: String,
   itemInfo: {
     itemId: { type: Number, required: true },
-    itemImg: { type: String, required: true },
+    itemImg: { type: String, required: false },
     itemName: { type: String, required: true },
     itemOwner: { type: String, required: true },
     option: {
