@@ -11,8 +11,7 @@ import ConnectMongoDBSession from "connect-mongodb-session"
 
 const app = express()
 app.use(express.json())
-mongoose
-  .connect(config.mongo.url, config.mongo.options)
+mongoose.connect(config.mongo.url, config.mongo.options)
   .then((result) => {
     // console.log(result)
     console.log("connected")
