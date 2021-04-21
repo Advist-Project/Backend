@@ -35,7 +35,7 @@ mongoDBStore.on("error", () => {
 });
 
 // cors 지정
-// app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
+app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
 app.use((req: any, res: any, next: any) => {
   const corsWhitelist = [
       'https://frontend-git-develop-advi33.vercel.app',
@@ -45,6 +45,7 @@ app.use((req: any, res: any, next: any) => {
   ];
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
       res.header('Access-Control-Allow-Origin', req.headers.origin);
+      res.header('Access-Control-Allow-Credential', true);
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   }
 
