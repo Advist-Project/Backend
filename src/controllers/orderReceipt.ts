@@ -65,4 +65,19 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
   }
 }
 
-export default { checkOrder, saveUserInfo }
+const completeOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const orderId : number = parseInt(req.params.orderId)
+    const orderList: any = await orderReceipt.findOne({ orderId: orderId })
+    res.status(200).json({
+      order_receipts: orderList
+    })
+  }
+  catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+}
+
+export default { checkOrder, saveUserInfo, completeOrder }
