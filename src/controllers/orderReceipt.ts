@@ -8,7 +8,6 @@ import orderReceipt from "../models/orderReceipt"
 const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: number = parseInt(req.params.userId)
-    // 이부분 고침
     const user: any = await User.findOne({ userId: userId })
     const userEmail: string = user.email
     const itemId: any = req.query.itemId
@@ -18,7 +17,6 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
     const orderReceipt = new OrderReceipt({
       orderId,
       userId,
-      // 이 부분고침
       userEmail,
       // receiptId 나중에 받기
       itemInfo: {
@@ -51,7 +49,6 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-// 이 부분고침
 const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { orderId, userId, userName, userPhone } = req.body
@@ -68,5 +65,4 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
   }
 }
 
-// 이 부분고침
 export default { checkOrder, saveUserInfo }
