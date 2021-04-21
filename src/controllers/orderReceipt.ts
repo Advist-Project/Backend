@@ -9,7 +9,8 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: number = parseInt(req.params.userId)
     // 이부분 고침
-    const userEmail: any = await User.findOne({ userId: userId })
+    const user: any = await User.findOne({ userId: userId })
+    const userEmail: string = user.email
     const itemId: any = req.query.itemId
     const item: any = await Item.findOne({ itemId: itemId })
     const optionId: any = req.query.optionId
