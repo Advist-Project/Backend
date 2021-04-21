@@ -43,7 +43,7 @@ module.exports = function (app) {
         }
         try{
         if (!doc) {
-          const userId: any = await getNextSequence("userinfo")
+          const userId: any = await getNextSequence("userInfo")
           const newUser = new User({
             userId: userId,
             googleId: profile.id,
@@ -85,7 +85,7 @@ module.exports = function (app) {
       }
       try{
       if (!doc) {
-        const userId: any = await getNextSequence("userinfo")
+        const userId: any = await getNextSequence("userInfo")
         const newUser = new User({
           userId: userId,
           kakaoId: profile.id,
@@ -125,7 +125,7 @@ module.exports = function (app) {
         }
         try{
         if (!doc) {
-          const userId: any = await getNextSequence("userinfo")
+          const userId: any = await getNextSequence("userInfo")
           const newUser = new User({
             userId: userId,
             naverId: profile.id,
