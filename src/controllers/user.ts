@@ -12,10 +12,10 @@ module.exports = function (app) {
   //passport 실행
   app.use(passport.initialize());
   app.use(passport.session());
-
+  
   //strategy에서 받은 정보들을 user에 입력 
   passport.serializeUser((user: IMongoDBUser, done: any) => {
-    // console.log('serializeUser', user)
+   // console.log('serializeUser', user)
     return done(null, user._id); //user._id만 보내서 데이터 양을 줄임
   });
 
@@ -37,34 +37,34 @@ module.exports = function (app) {
 
     function (_: any, __: any, profile: any, cb: any) {
       User.findOne({ googleId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
-
+       
         if (err) {
           return cb(err, null);
         }
-        try {
-          if (!doc) {
-            const userId: any = await getNextSequence("userInfo")
-            const newUser = new User({
-              userId: userId,
-              googleId: profile.id,
-              username: profile.name.givenName,
-              email: profile.emails[0].value,
-              thumbnail: profile.photos[0].value
-            });
+        try{
+        if (!doc) {
+          const userId: any = await getNextSequence("userInfo")
+          const newUser = new User({
+            userId: userId,
+            googleId: profile.id,
+            username: profile.name.givenName,
+            email: profile.emails[0].value,
+            thumbnail: profile.photos[0].value
+          });
 
-            await newUser.save();
-            cb(null, newUser);
+          await newUser.save();
+          cb(null, newUser);
 
-          }
-          cb(null, doc);
-
-
-
-        } catch (error) {
-          console.log('error');
         }
+        cb(null, doc);
 
+        
 
+      } catch(error) {
+        console.log('error');
+        }
+        
+        
       })
 
     }));
@@ -76,39 +76,39 @@ module.exports = function (app) {
     clientSecret: config.kakao.secret,
     callbackURL: "/user/auth/kakao/callback"
   },
-    function (_: any, __: any, profile: any, cb: any) {
+  function (_: any, __: any, profile: any, cb: any) {
 
-      User.findOne({ kakaoId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
+    User.findOne({ kakaoId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
 
-        if (err) {
-          return cb(err, null);
-        }
-        try {
-          if (!doc) {
-            const userId: any = await getNextSequence("userInfo")
-            const newUser = new User({
-              userId: userId,
-              kakaoId: profile.id,
-              email: profile._json.kakao_account.email,
-              username: profile.displayName,
-              thumbnail: profile._json.properties.profile_image
-            });
+      if (err) {
+        return cb(err, null);
+      }
+      try{
+      if (!doc) {
+        const userId: any = await getNextSequence("userInfo")
+        const newUser = new User({
+          userId: userId,
+          kakaoId: profile.id,
+          email: profile._json.kakao_account.email,
+          username: profile.displayName,
+          thumbnail: profile._json.properties.profile_image
+        });
 
-            await newUser.save();
-            cb(null, newUser);
-          }
-          cb(null, doc);
+        await newUser.save();
+        cb(null, newUser);
+      }
+      cb(null, doc);
 
 
+      
+    } catch(error) {
+      console.log('error');
+      }
 
-        } catch (error) {
-          console.log('error');
-        }
+    })
 
-      })
-
-    }
-  ));
+  }
+));
 
 
   passport.use(new NaverStrategy({
@@ -123,23 +123,23 @@ module.exports = function (app) {
         if (err) {
           return cb(err, null);
         }
-        try {
-          if (!doc) {
-            const userId: any = await getNextSequence("userInfo")
-            const newUser = new User({
-              userId: userId,
-              naverId: profile.id,
-              email: profile.emails[0].value,
-              username: profile.displayName,
-              thumbnail: profile._json.profile_image
-            });
+        try{
+        if (!doc) {
+          const userId: any = await getNextSequence("userInfo")
+          const newUser = new User({
+            userId: userId,
+            naverId: profile.id,
+            email: profile.emails[0].value,
+            username: profile.displayName,
+            thumbnail: profile._json.profile_image
+          });
 
-            await newUser.save();
-            cb(null, newUser);
-          }
-          cb(null, doc);
-        } catch (error) {
-          console.log('error');
+          await newUser.save();
+          cb(null, newUser);
+        }
+        cb(null, doc);
+      } catch(error) {
+        console.log('error');
         }
       })
 

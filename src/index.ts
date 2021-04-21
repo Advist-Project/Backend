@@ -39,15 +39,15 @@ mongoDBStore.on("error", () => {
 // app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
 app.use((req: any, res: any, next: any) => {
   const corsWhitelist = [
-    'https://frontend-git-develop-advi33.vercel.app',
-    'https://frontend-git-ympark-advi33.vercel.app',
-    'https://localhost:3000',
-    'http://localhost:3000'
+      'https://frontend-git-develop-advi33.vercel.app',
+      'https://frontend-git-ympark-advi33.vercel.app',
+      'https://localhost:3000',
+      'http://localhost:3000'
   ];
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      res.header('Access-Control-Allow-Origin', req.headers.origin);
+      res.header('Access-Control-Allow-Credentials', true);
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   }
 
   next();
