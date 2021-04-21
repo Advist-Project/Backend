@@ -15,13 +15,4 @@ const getItem = async (req: Request, res: Response, next: NextFunction) => {
         })
     }
 }
-const getItemToOrderReceipt = async (id: number) => {
-    try {
-        const result = await Item.findOne({ itemId: id })
-        return result
-    } catch (error) {
-        console.log("getItemToOrderReceipt error" + error.message)
-        return error.message
-    }
-}
-export default { getItem, getItemToOrderReceipt }
+export default { getItem }
