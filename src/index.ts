@@ -45,7 +45,7 @@ app.use((req: any, res: any, next: any) => {
   ];
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
       res.header('Access-Control-Allow-Origin', req.headers.origin);
-      res.header('Access-Control-Allow-Credential', true);
+      res.header('Access-Control-Allow-Credentials', true);
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   }
 
