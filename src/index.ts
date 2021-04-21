@@ -6,7 +6,6 @@ import payRoutes from "./routes/pay"
 import itemRoutes from "./routes/item"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
-
 /// cors 등록
 
 const app = express()
@@ -37,8 +36,21 @@ mongoDBStore.on("error", () => {
 
 // cors 지정
 // app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
+app.use((req: any, res: any, next: any) => {
+  const corsWhitelist = [
+      'https://frontend-git-develop-advi33.vercel.app',
+      'https://frontend-git-ympark-advi33.vercel.app',
+      'https://localhost:3000',
+      'http://localhost:3000'
+  ];
+  if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+      res.header('Access-Control-Allow-Origin', req.headers.origin);
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  }
 
-app.use(cors({ origin: true, credentials: true }))
+  next();
+});
+
 //세션 설정
 app.use(
   session({
