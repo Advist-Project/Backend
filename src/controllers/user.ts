@@ -37,11 +37,11 @@ module.exports = function (app) {
 
     function (_: any, __: any, profile: any, cb: any) {
       User.findOne({ googleId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
-
+       
         if (err) {
           return cb(err, null);
         }
-
+        try{
         if (!doc) {
           const userId: any = await getNextSequence("userinfo")
           const newUser = new User({
@@ -58,8 +58,13 @@ module.exports = function (app) {
         }
         cb(null, doc);
 
+        
 
-
+      } catch(error) {
+        console.log('error');
+        }
+        
+        
       })
 
     }));
@@ -78,7 +83,7 @@ module.exports = function (app) {
       if (err) {
         return cb(err, null);
       }
-
+      try{
       if (!doc) {
         const userId: any = await getNextSequence("userinfo")
         const newUser = new User({
@@ -93,6 +98,13 @@ module.exports = function (app) {
         cb(null, newUser);
       }
       cb(null, doc);
+
+
+      
+    } catch(error) {
+      console.log('error');
+      }
+
     })
 
   }
@@ -111,7 +123,7 @@ module.exports = function (app) {
         if (err) {
           return cb(err, null);
         }
-
+        try{
         if (!doc) {
           const userId: any = await getNextSequence("userinfo")
           const newUser = new User({
@@ -126,6 +138,9 @@ module.exports = function (app) {
           cb(null, newUser);
         }
         cb(null, doc);
+      } catch(error) {
+        console.log('error');
+        }
       })
 
     }
