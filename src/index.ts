@@ -10,6 +10,11 @@ import ConnectMongoDBSession from "connect-mongodb-session"
 
 const app = express()
 app.use(express.json())
+<<<<<<< Updated upstream
+=======
+
+app.set("trust proxy", 1)
+>>>>>>> Stashed changes
 mongoose
   .connect(config.mongo.url, config.mongo.options)
   .then((result) => {
@@ -18,8 +23,9 @@ mongoose
   })
   .catch((error) => {
     console.log(error.message)
-  });
+  })
 
+<<<<<<< Updated upstream
   //세션 저장을 위해 몽고db에 로그인
   const MongoDBStore = ConnectMongoDBSession(session);
   const mongoDBStore = new MongoDBStore({
@@ -34,6 +40,51 @@ mongoose
   
   // cors 지정
   app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
+=======
+//세션 저장을 위해 몽고db에 로그인
+const MongoDBStore = ConnectMongoDBSession(session)
+const mongoDBStore = new MongoDBStore({
+  uri: config.mongo.url,
+  databaseName: 'advist',
+  collection: "sessions"
+})
+
+mongoDBStore.on("error", () => {
+  // Error's here!
+})
+
+// cors 지정
+// app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
+app.use((req: any, res: any, next: any) => {
+  const corsWhitelist = [
+    'https://frontend-git-develop-advi33.vercel.app',
+    'https://frontend-git-ympark-advi33.vercel.app',
+    'https://localhost:3000',
+    'http://localhost:3000'
+  ]
+  if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  }
+
+  next()
+})
+
+//세션 설정
+app.use(
+  session({
+    secret: "secretcode",
+    resave: true,
+    saveUninitialized: true,
+    store: mongoDBStore, //세션을 데이터베이스에 저장
+    cookie: {
+      sameSite: "none",
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
+    }
+  }))
+>>>>>>> Stashed changes
 
   //세션 설정
   app.use(
@@ -58,7 +109,7 @@ app.get(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.send("hi")
   }
-);
+)
 app.use("/user", userRoutes)
 app.use("/pay", payRoutes)
 app.use(
