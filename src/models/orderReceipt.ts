@@ -5,10 +5,12 @@ const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
   userId: { type: Number, required: true },
   userEmail: { type: String, required: true },
-  receiptId: String,
+  userName: { type: String, required: false },
+  userPhone: { type: String, required: false },
+  receiptId: { type: String, required: false },
   itemInfo: {
     itemId: { type: Number, required: true },
-    itemImg: { type: String, required: true },
+    itemImg: { type: String, required: false },
     itemName: { type: String, required: true },
     itemOwner: { type: String, required: true },
     option: {
@@ -16,7 +18,7 @@ const orderReceiptSchema: Schema = new Schema({
       title: { type: String, required: true },
       type: { type: String, required: true },
       desc: { type: String, required: true },
-      file: String,
+      file: { type: String, required: false },
       price: { type: Number, required: true },
       deleteYN: { type: Boolean, required: true },
       discountPrice: { type: Number, required: true },

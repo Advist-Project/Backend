@@ -1,18 +1,11 @@
 import User from '../models/user'
 import { IMongoDBUser } from "../interfaces/user"
 import config from '../config/config'
-<<<<<<< Updated upstream
-import passport from 'passport';
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const NaverStrategy = require('passport-naver').Strategy;
-const KakaoStrategy = require('passport-kakao').Strategy;
-=======
 import passport from 'passport'
 import getNextSequence from './counter'
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const NaverStrategy = require('passport-naver').Strategy
 const KakaoStrategy = require('passport-kakao').Strategy
->>>>>>> Stashed changes
 
 module.exports = function (app) {
 
@@ -48,19 +41,6 @@ module.exports = function (app) {
         if (err) {
           return cb(err, null)
         }
-<<<<<<< Updated upstream
-
-        if (!doc) {
-          const newUser = new User({
-            googleId: profile.id,
-            username: profile.name.givenName,
-            email: profile.emails[0].value,
-            thumbnail: profile.photos[0].value
-          });
-
-          await newUser.save();
-          cb(null, newUser);
-=======
         try {
           if (!doc) {
             const userId: any = await getNextSequence("userInfo")
@@ -71,7 +51,6 @@ module.exports = function (app) {
               email: profile.emails[0].value,
               thumbnail: profile.photos[0].value
             })
->>>>>>> Stashed changes
 
             await newUser.save()
             cb(null, newUser)
@@ -81,14 +60,11 @@ module.exports = function (app) {
 
 
 
-<<<<<<< Updated upstream
-=======
         } catch (error) {
           console.log('error')
         }
 
 
->>>>>>> Stashed changes
       })
 
     }))
@@ -100,33 +76,9 @@ module.exports = function (app) {
     clientSecret: config.kakao.secret,
     callbackURL: "/user/auth/kakao/callback"
   },
-<<<<<<< Updated upstream
-  function (_: any, __: any, profile: any, cb: any) {
-
-    User.findOne({ kakaoId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
-
-      if (err) {
-        return cb(err, null);
-      }
-
-      if (!doc) {
-        const newUser = new User({
-          kakaoId: profile.id,
-          email: profile._json.kakao_account.email,
-          username: profile.displayName,
-          thumbnail: profile._json.properties.profile_image
-        });
-
-        await newUser.save();
-        cb(null, newUser);
-      }
-      cb(null, doc);
-    })
-=======
     function (_: any, __: any, profile: any, cb: any) {
 
       User.findOne({ kakaoId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
->>>>>>> Stashed changes
 
         if (err) {
           return cb(err, null)
@@ -169,23 +121,6 @@ module.exports = function (app) {
       User.findOne({ naverId: profile.id }, async (err: Error, doc: IMongoDBUser) => {
 
         if (err) {
-<<<<<<< Updated upstream
-          return cb(err, null);
-        }
-
-        if (!doc) {
-          const newUser = new User({
-            naverId: profile.id,
-            email: profile.emails[0].value,
-            username: profile.displayName,
-            thumbnail: profile._json.profile_image
-          });
-
-          await newUser.save();
-          cb(null, newUser);
-        }
-        cb(null, doc);
-=======
           return cb(err, null)
         }
         try {
@@ -206,7 +141,6 @@ module.exports = function (app) {
         } catch (error) {
           console.log('error')
         }
->>>>>>> Stashed changes
       })
 
     }

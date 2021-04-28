@@ -1,11 +1,5 @@
-<<<<<<< Updated upstream
-import express from "express";
-import cors from "cors"
-var router = express.Router();
-=======
 import express from "express"
 var router = express.Router()
->>>>>>> Stashed changes
 module.exports = function (passport) {
 
 
@@ -36,10 +30,6 @@ module.exports = function (passport) {
   router.get("/getuser", (req, res) => {
     res.send(req.user)
   })
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   router.get("/auth/logout", (req, res) => {
     req.logout()
     req.session.destroy(() => {
