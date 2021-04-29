@@ -3,6 +3,7 @@ import cors from "cors"
 import mongoose from "mongoose"
 import config from "./config/config"
 import payRoutes from "./routes/pay"
+import itemRoutes from "./routes/item"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 
@@ -92,6 +93,7 @@ app.get(
 )
 app.use("/user", userRoutes)
 app.use("/pay", payRoutes)
+app.use("/item", itemRoutes)
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const error = new Error("Not Found")

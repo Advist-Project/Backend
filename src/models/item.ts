@@ -8,7 +8,6 @@ const itemSchema: Schema = new Schema({
     label: { type: String, required: true },
     // 함수 필요
     likes: { type: Number, required: true },
-    desc: { type: String, required: true }, //상품설명,
     coachImg: { type: String, required: false }, //코치 설명 이미지,
     commentImg: { type: String, required: false }, //후기 이미지,
     // detail page에 있는 양식 or 예시의 image와 설명(title)
