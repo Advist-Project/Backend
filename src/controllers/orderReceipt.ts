@@ -36,7 +36,8 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
           discountPrice: item['options'][optionId - 1]['discountPrice'],
         },
       },
-      deleteYN: item['deleteYN'],
+      // 결제 승인전
+      status: -1,
     })
     await orderReceipt.save()
     res.status(200).json({
@@ -67,7 +68,7 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
 
 const completeOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const orderId : number = parseInt(req.params.orderId)
+    const orderId: number = parseInt(req.params.orderId)
     const orderList: any = await orderReceipt.findOne({ orderId: orderId })
     res.status(200).json({
       order_receipts: orderList

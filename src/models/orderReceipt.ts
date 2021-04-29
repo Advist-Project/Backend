@@ -22,9 +22,17 @@ const orderReceiptSchema: Schema = new Schema({
       price: { type: Number, required: true },
       deleteYN: { type: Boolean, required: true },
       discountPrice: { type: Number, required: true },
-    },
+    }
   },
-  deleteYN: { type: Boolean, required: true },
+  paymentInfo: {
+    method: { type: String, required: false },
+    cardName: { type: String, required: false },
+    cardNumber: { type: String, required: false },
+    purchasedTime: { type: String, required: false },
+    revokedTime: { type: String, required: false }
+  },
+  //-1, 0, 1, 2
+  status: { type: Number, required: true }
 })
 
 export default mongoose.model<OrderReceipt>("OrderReceipt", orderReceiptSchema)

@@ -23,5 +23,13 @@ export default interface OrderReceipt extends Document {
             discountPrice?: number
         }
     },
-    deleteYN?: boolean
+    paymentInfo?: {
+        method?: string,
+        cardName?: string,
+        cardNumber?: string,
+        purchasedTime?: string,
+        revokedTime?: string
+    }
+    //-1, 0, 1, 2
+    status?: number
 }
