@@ -16,8 +16,6 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
     // promise객체로 나옴..
     const order: any = await orderReceipt.findOne({ orderId: orderId })
     const realPrice: any = order.itemInfo.option.discountPrice
-    console.log(realPrice)
-
     // bootpay accesstoken
     const response = await RestClient.getAccessToken()
     // 네트워크 오류가 없고, token존재시
@@ -31,8 +29,21 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
         if (verifyResponse.data.price == realPrice && verifyResponse.data.status === 1) {
           // 상품 지급 혹은 결제 완료 처리
           console.log("success verify")
+          console.log(verifyResponse.data.purchased_at)
           // receiptId를 해당 orderReceipt field에 update
-          await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: { receiptId: receiptId } }, { new: true })
+          const params = {
+            receiptId: receiptId,
+            paymentInfo: {
+              method: verifyResponse.data.payment_data.pm,
+              cardName: verifyResponse.data.payment_data.card_name,
+              cardNumber: verifyResponse.data.payment_data.card_no,
+              purchasedTime: verifyResponse.data.purchased_at,
+              revokedTime: verifyResponse.data.revoked_at
+            },
+            // -1 -> 1 결제 최종 완료
+            status: 1
+          }
+          await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: params }, { new: true })
           console.log("success update receiptId")
           res.status(200).json({
             message: "success verify"
@@ -47,8 +58,8 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
             reason: "?",
           })
           if (cancelResponse.status === 200) {
-            // 해당 orderReceipt는 사용하지 않는 것. (deleteYN : false-> true)
-            await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: { deleteYN: true } }, { new: true })
+            // 해당 orderReceipt는 사용하지 않는 것. (statue : -1 -> 0)
+            await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: { status: 0 } }, { new: true })
             console.log("success cancel")
             res.status(200).json({
               message: "success"
@@ -60,22 +71,6 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
     }
   }
   catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
-  }
-}
-
-//사용자가 중간에 결제를 그만두었을 때 (예 : 정보입력하다가 나감..)
-const payStop = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const orderId: number = parseInt(req.params.orderId)
-    await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: { deleteYN: true } }, { new: true })
-    console.log("success cancel")
-    res.status(200).json({
-      result: "success"
-    })
-  } catch (error) {
     res.status(500).json({
       message: error.message
     })
@@ -100,8 +95,8 @@ const payCancel = async (req: Request, res: Response, next: NextFunction) => {
         reason: reason,
       })
       if (response.status === 200) {
-        // 해당 orderReceipt는 사용하지 않는 것. (deleteYN : false-> true)
-        await orderReceipt.findOneAndUpdate({ receiptId: receiptId }, { $set: { deleteYN: true } }, { new: true })
+        // 해당 orderReceipt는 사용하지 않는 것. (status : 1 -> 2)
+        await orderReceipt.findOneAndUpdate({ receiptId: receiptId }, { $set: { status: 2 } }, { new: true })
         console.log("success cancel" + response)
       }
     }
@@ -114,4 +109,4 @@ const payCancel = async (req: Request, res: Response, next: NextFunction) => {
 
 }
 
-export default { payVerify, payCancel, payStop }
+export default { payVerify, payCancel }

@@ -42,7 +42,8 @@ app.use((req: any, res: any, next: any) => {
     'https://frontend-git-develop-advi33.vercel.app',
     'https://frontend-git-ympark-advi33.vercel.app',
     'https://localhost:3000',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://advist.vercel.app/'
   ]
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
     res.header('Access-Control-Allow-Origin', req.headers.origin)
@@ -52,20 +53,6 @@ app.use((req: any, res: any, next: any) => {
 
   next()
 })
-
-//세션 설정
-app.use(
-  session({
-    secret: "secretcode",
-    resave: true,
-    saveUninitialized: true,
-    store: mongoDBStore, //세션을 데이터베이스에 저장
-    cookie: {
-      sameSite: "none",
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
-    }
-  }))
 
 //세션 설정
 app.use(
