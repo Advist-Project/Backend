@@ -54,18 +54,34 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
           const cancelResponse = await RestClient.cancel({
             receiptId: receiptId,
             price: verifyResponse.data.price,
-            name: "name",
-            reason: "?",
+            name: order.userEmail,
+            reason: "Fail verification",
           })
           if (cancelResponse.status === 200) {
             // 해당 orderReceipt는 사용하지 않는 것. (statue : -1 -> 0)
-            await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: { status: 0 } }, { new: true })
+            const cancelParams = {
+              status: 0,
+              receiptId: receiptId,
+              paymentInfo: {
+                method: verifyResponse.data.payment_data.pm,
+                cardName: verifyResponse.data.payment_data.card_name,
+                cardNumber: verifyResponse.data.payment_data.card_no,
+                purchasedTime: verifyResponse.data.purchased_at,
+                revokedTime: cancelResponse.data.revoked_at
+              }
+            }
+            await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: cancelParams }, { overwrite: true, new: true })
             console.log("success cancel")
-            res.status(200).json({
-              message: "success"
+            console.log("success update status")
+            res.status(201).json({
+              message: "success cancel"
+            })
+          } else {
+            res.status(501).json({
+              message: "Fail to cancel"
             })
           }
-          console.log("success update deleteYN")
+
         }
       }
     }
