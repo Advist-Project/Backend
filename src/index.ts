@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import config from "./config/config"
 import payRoutes from "./routes/pay"
 import itemRoutes from "./routes/item"
+import exhibitionRoutes from "./routes/exhibition"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 
@@ -43,7 +44,9 @@ app.use((req: any, res: any, next: any) => {
     'https://frontend-git-ympark-advi33.vercel.app',
     'https://localhost:3000',
     'http://localhost:3000',
-    'https://advist.vercel.app'
+    'https://advist.vercel.app',
+    'https://advist.kr',
+    'https://www.advist.kr'
   ]
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
     res.header('Access-Control-Allow-Origin', req.headers.origin)
@@ -81,6 +84,7 @@ app.get(
 app.use("/user", userRoutes)
 app.use("/pay", payRoutes)
 app.use("/item", itemRoutes)
+app.use("/exhibition", exhibitionRoutes)
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const error = new Error("Not Found")
