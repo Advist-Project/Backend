@@ -9,6 +9,7 @@ router.get("/verify/:receiptId", bootPayController.payVerify)
 
 router.get("/checkorder/:userId", orderReceiptController.checkOrder)
 router.get("/complete/:orderId", orderReceiptController.completeOrder)
+router.get("/aftercomplete/:orderId", orderReceiptController.afterCompleteOrder)
 router.post("/userinfo", orderReceiptController.saveUserInfo)
 
 export = router

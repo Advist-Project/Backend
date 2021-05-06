@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { RestClient } from "@bootpay/server-rest-client"
 import config from "../config/config"
 import orderReceipt from "../models/orderReceipt"
+import orderReciptController from "./orderReceipt"
 
 const payVerify = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,7 +30,6 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
         if (verifyResponse.data.price == realPrice && verifyResponse.data.status === 1) {
           // 상품 지급 혹은 결제 완료 처리
           console.log("success verify")
-          console.log(verifyResponse.data.purchased_at)
           // receiptId를 해당 orderReceipt field에 update
           const params = {
             receiptId: receiptId,
@@ -40,11 +40,11 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
               purchasedTime: verifyResponse.data.purchased_at,
               revokedTime: verifyResponse.data.revoked_at
             },
-            // -1 -> 1 결제 최종 완료
+            // -1 -> 1 결제 검증 완료
             status: 1
           }
-          await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: params }, { new: true })
-          console.log("success update receiptId")
+          await orderReciptController.orderReciptFindUpdate(orderId, params)
+          console.log("successful update receiptId")
           res.status(200).json({
             message: "success verify"
           })
@@ -59,6 +59,7 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
           })
           if (cancelResponse.status === 200) {
             // 해당 orderReceipt는 사용하지 않는 것. (statue : -1 -> 0)
+            // 검증 실패 후 취소
             const cancelParams = {
               status: 0,
               receiptId: receiptId,
@@ -70,9 +71,9 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
                 revokedTime: cancelResponse.data.revoked_at
               }
             }
-            await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: cancelParams }, { overwrite: true, new: true })
+            await orderReciptController.orderReciptFindUpdate(orderId, cancelParams)
             console.log("success cancel")
-            console.log("success update status")
+            console.log("successful update status")
             res.status(201).json({
               message: "success cancel"
             })
