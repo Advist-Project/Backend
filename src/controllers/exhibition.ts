@@ -8,7 +8,17 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
         else {
             const infoPromise = itemIds.map(async function (itemId: number): Promise<object | null> {
                 try {
-                    const itemInfo = await Item.findOne({ itemId: itemId }, { options: false, template: false })
+                    const item = await Item.findOne({ itemId: itemId })
+                    const itemInfo = {
+                        "itemId": item?.itemId,
+                        "title": item?.title,
+                        "label": item?.label,
+                        "likes": item?.likes,
+                        "img": item?.img,
+                        "tag": item?.tag,
+                        "price": item?.options[0].price,
+                        "discountPrice": item?.options[0].discountPrice
+                    }
                     return itemInfo
                 }
                 catch (error) {
@@ -53,7 +63,8 @@ const bestExhibition = async (req: Request, res: Response, next: NextFunction) =
 }
 const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const exhibition = await Exhibition.find()
+        const exhibition = await Exhibition.find().sort({ "rank": 1 })
+        // iteminfo 붙이는 로직
         for (let i = 0; i < exhibition.length; i++) {
             const itemIdArray = exhibition[i]?.itemId
             const Items = await referenceOfExhibition(itemIdArray)

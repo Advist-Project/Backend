@@ -5,6 +5,18 @@ import Item from "../models/item"
 import User from "../models/user"
 import orderReceipt from "../models/orderReceipt"
 
+const orderReciptFindUpdate = async (id: number, param: any) => {
+  try {
+    await orderReceipt.findOneAndUpdate(
+      { orderId: id },
+      { $set: param },
+      { new: true })
+  }
+  catch (error) {
+    console.log(error.message)
+  }
+}
+
 const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: number = parseInt(req.params.userId)
@@ -18,6 +30,7 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
       orderId,
       userId,
       userEmail,
+      customerOrderId: orderId + 484930,
       // receiptId 나중에 받기
       itemInfo: {
         itemId,
@@ -53,8 +66,12 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
 const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { orderId, userId, userName, userPhone } = req.body
-    await User.findOneAndUpdate({ userId: userId }, { $set: { name: userName, phone: userPhone } }, { new: true })
-    await orderReceipt.findOneAndUpdate({ orderId: orderId }, { $set: { userName: userName, userPhone: userPhone } }, { new: true })
+    const userParam = {
+      name: userName,
+      phone: userPhone
+    }
+    await User.findOneAndUpdate({ userId: userId }, { $set: userParam }, { new: true })
+    await orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
     })
@@ -81,4 +98,24 @@ const completeOrder = async (req: Request, res: Response, next: NextFunction) =>
   }
 }
 
-export default { checkOrder, saveUserInfo, completeOrder }
+const afterCompleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const orderId: number = parseInt(req.params.orderId)
+    const param = {
+      status: 2
+    }
+    // 최종 완료
+    await orderReciptFindUpdate(orderId, param)
+    console.log("successful update status")
+    res.status(200).json({
+      result: "success"
+    })
+  }
+  catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+}
+
+export default { checkOrder, saveUserInfo, completeOrder, afterCompleteOrder, orderReciptFindUpdate }

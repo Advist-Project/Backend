@@ -7,6 +7,7 @@ export default interface OrderReceipt extends Document {
     userName?: string,
     userPhone?: string,
     receiptId?: string,
+    customerOrderId?: number,
     itemInfo?: {
         itemId?: number,
         itemImg?: string,
