@@ -8,6 +8,7 @@ const orderReceiptSchema: Schema = new Schema({
   userName: { type: String, required: false },
   userPhone: { type: String, required: false },
   receiptId: { type: String, required: false },
+  customerOrderId: { type: Number, required: false },
   itemInfo: {
     itemId: { type: Number, required: true },
     itemImg: { type: String, required: false },
