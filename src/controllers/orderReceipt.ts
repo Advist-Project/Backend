@@ -87,7 +87,7 @@ const saveConsultationOfCoaching = async (req: Request, res: Response, next: Nex
     const userParam = {
       coachingContent: content
     }
-    console.log(content)
+
     await orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
