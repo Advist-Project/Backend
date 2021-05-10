@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import Exhibition from "../models/exhibition"
-import Item from "../models/item";
+import Item from "../models/item"
+import moment from "./moment"
 
 const referenceOfExhibition = async (itemIds?: Array<number>) => {
     try {
@@ -8,7 +9,7 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
         else {
             const infoPromise = itemIds.map(async function (itemId: number): Promise<object | null> {
                 try {
-                    const item = await Item.findOne({ itemId: itemId })
+                    const item = await Item.findOne({ itemId: itemId, deleteYN: false })
                     const itemInfo = {
                         "itemId": item?.itemId,
                         "title": item?.title,
@@ -44,7 +45,7 @@ const bestExhibition = async (req: Request, res: Response, next: NextFunction) =
         const exhibition = await Exhibition.findOne({ rank: 1 })
         const itemIdArray = exhibition?.itemId
         const Items = await referenceOfExhibition(itemIdArray)
-        if (exhibition == null) {
+        if (exhibition === null) {
             res.status(501).json({
                 error: "rank(우선순위)가 1등인게 없습니다."
             })
@@ -63,7 +64,16 @@ const bestExhibition = async (req: Request, res: Response, next: NextFunction) =
 }
 const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const exhibition = await Exhibition.find().sort({ "rank": 1 })
+        const now = moment.nowDateTime()
+        const exhibition = await Exhibition.find(
+            {
+                dateStart: { $lte: now },
+                dateEnd: { $gte: now }
+            }
+        )
+            .where("visible").equals(true)
+            .where("rank").ne(1)
+            .sort({ "rank": 1 })
         // iteminfo 붙이는 로직
         for (let i = 0; i < exhibition.length; i++) {
             const itemIdArray = exhibition[i]?.itemId
