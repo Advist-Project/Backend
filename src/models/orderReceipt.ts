@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose"
 import OrderReceipt from "../interfaces/orderReceipt"
+import moment from "moment"
 
 const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
@@ -9,6 +10,7 @@ const orderReceiptSchema: Schema = new Schema({
   userPhone: { type: String, required: false },
   receiptId: { type: String, required: false },
   customerOrderId: { type: Number, required: false },
+  createdAt: { type: String, required: false },
   itemInfo: {
     itemId: { type: Number, required: true },
     itemImg: { type: String, required: false },
@@ -34,6 +36,10 @@ const orderReceiptSchema: Schema = new Schema({
   },
   //-1, 0, 1, 2
   status: { type: Number, required: true }
+})
+
+orderReceiptSchema.pre<OrderReceipt>('save', function () {
+  this.createdAt = moment().format('YYYY-MM-DD HH:mm:ss')
 })
 
 export default mongoose.model<OrderReceipt>("OrderReceipt", orderReceiptSchema)

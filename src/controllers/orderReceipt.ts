@@ -67,8 +67,8 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
   try {
     let { orderId, userId, userName, userPhone } = req.body
     const userParam = {
-      name: userName,
-      phone: userPhone
+      userName: userName,
+      userPhone: userPhone
     }
     await User.findOneAndUpdate({ userId: userId }, { $set: userParam }, { new: true })
     await orderReciptFindUpdate(orderId, userParam)
