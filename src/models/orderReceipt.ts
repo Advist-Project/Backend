@@ -1,8 +1,7 @@
 import mongoose, { Schema } from "mongoose"
 import OrderReceipt from "../interfaces/orderReceipt"
 import moment from "moment"
-import tz from "moment-timezone"
-
+import "moment-timezone"
 
 const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
@@ -42,6 +41,7 @@ const orderReceiptSchema: Schema = new Schema({
 
 orderReceiptSchema.pre<OrderReceipt>('save', function () {
   this.createdAt = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
+  console.log(this.createdAt)
 })
 
 export default mongoose.model<OrderReceipt>("OrderReceipt", orderReceiptSchema)
