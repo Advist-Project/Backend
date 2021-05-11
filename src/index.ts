@@ -93,6 +93,7 @@ app.use(
     })
   }
 )
+const { PORT=3000, LOCAL_ADDRESS='0.0.0.0' } = process.env
 
-const port = process.env.PORT || 5000
-app.listen(port, () => console.log("start" + port))
+app.listen(PORT,LOCAL_ADDRESS, () =>{ const address = server.address()
+console.log("start" + address)})
