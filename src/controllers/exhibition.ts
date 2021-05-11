@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express"
+import _ from "lodash"
 import Exhibition from "../models/exhibition"
 import Item from "../models/item"
 import moment from "./moment"
@@ -10,17 +11,25 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
             const infoPromise = itemIds.map(async function (itemId: number): Promise<object | null> {
                 try {
                     const item = await Item.findOne({ itemId: itemId, deleteYN: false })
-                    const itemInfo = {
-                        "itemId": item?.itemId,
-                        "title": item?.title,
-                        "label": item?.label,
-                        "likes": item?.likes,
-                        "img": item?.img,
-                        "tag": item?.tag,
-                        "price": item?.options[0].price,
-                        "discountPrice": item?.options[0].discountPrice
+
+                    // 빈 값을 찾는다
+                    if (_.isEmpty(item)) {
+                        // 안그러면 undefine으로 값이 채워짐.
+                        return {}
+                    } else {
+                        const itemInfo = {
+                            "itemId": item?.itemId,
+                            "title": item?.title,
+                            "label": item?.label,
+                            "likes": item?.likes,
+                            "img": item?.img,
+                            "tag": item?.tag,
+                            "price": item?.options[0].price,
+                            "discountPrice": item?.options[0].discountPrice
+                        }
+                        return itemInfo
                     }
-                    return itemInfo
+
                 }
                 catch (error) {
                     return error.message
@@ -28,8 +37,22 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
             })
             // promise형식을 object 형식으로..
             let infoJson: Array<object | null> = []
-            for (let i = 0; i < infoPromise.length; i++) {
-                infoJson[i] = await infoPromise[i]
+            // itemInfo의 개수
+            let cnt = 0
+            // 추가되는 index
+            let index = 0
+            while (cnt < infoPromise.length) {
+                let info = await infoPromise[cnt]
+                // 빈값({})이 아니면
+                if (!_.isEmpty(info)) {
+                    // index에 info 넣기
+                    infoJson[index] = info
+                    index++
+                    cnt++
+                } else {
+                    cnt++
+                }
+
             }
             return infoJson
         }
@@ -78,7 +101,10 @@ const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
         for (let i = 0; i < exhibition.length; i++) {
             const itemIdArray = exhibition[i]?.itemId
             const Items = await referenceOfExhibition(itemIdArray)
+
             exhibition[i].itemInfo = Items
+
+
         }
         res.status(200).json({
             exhibition: exhibition
