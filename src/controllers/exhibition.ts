@@ -3,36 +3,31 @@ import _ from "lodash"
 import Exhibition from "../models/exhibition"
 import Item from "../models/item"
 import moment from "./moment"
+import itemController from "./item"
 
 const referenceOfExhibition = async (itemIds?: Array<number>) => {
     try {
         if (itemIds == undefined) return -1
         else {
             const infoPromise = itemIds.map(async function (itemId: number): Promise<object | null> {
-                try {
-                    const item = await Item.findOne({ itemId: itemId, deleteYN: false })
-
-                    // 빈 값을 찾는다
-                    if (_.isEmpty(item)) {
-                        // 안그러면 undefine으로 값이 채워짐.
-                        return {}
-                    } else {
-                        const itemInfo = {
-                            "itemId": item?.itemId,
-                            "title": item?.title,
-                            "label": item?.label,
-                            "likes": item?.likes,
-                            "img": item?.img,
-                            "tag": item?.tag,
-                            "price": item?.options[0].price,
-                            "discountPrice": item?.options[0].discountPrice
-                        }
-                        return itemInfo
+                const item = await Item.findOne({ itemId: itemId, deleteYN: false })
+                // 빈 값을 찾는다
+                if (_.isEmpty(item)) {
+                    // 안그러면 undefine으로 값이 채워짐.-> map이라서
+                    return {}
+                } else {
+                    const realOptions = await itemController.isOkOptions(item?.options, itemId)
+                    const itemInfo = {
+                        "itemId": item?.itemId,
+                        "title": item?.title,
+                        "label": item?.label,
+                        "likes": item?.likes,
+                        "img": item?.img,
+                        "tag": item?.tag,
+                        "price": realOptions[0]["price"],
+                        "discountPrice": realOptions[0]["discountPrice"]
                     }
-
-                }
-                catch (error) {
-                    return error.message
+                    return itemInfo
                 }
             })
             // promise형식을 object 형식으로..
@@ -52,11 +47,9 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
                 } else {
                     cnt++
                 }
-
             }
             return infoJson
         }
-
     }
     catch (error) {
         return error.message
@@ -68,16 +61,22 @@ const bestExhibition = async (req: Request, res: Response, next: NextFunction) =
         const exhibition = await Exhibition.findOne({ rank: 1 })
         const itemIdArray = exhibition?.itemId
         const Items = await referenceOfExhibition(itemIdArray)
-        if (exhibition === null) {
+        if (Items === -1) {
             res.status(501).json({
-                error: "rank(우선순위)가 1등인게 없습니다."
+                error: "itemId에 오류가 있습니다."
+            })
+        } else {
+            if (exhibition === null) {
+                res.status(502).json({
+                    error: "rank(우선순위)가 1등인게 없습니다."
+                })
+            }
+            else
+                exhibition.itemInfo = Items
+            res.status(200).json({
+                exhibition: exhibition
             })
         }
-        else
-            exhibition.itemInfo = Items
-        res.status(200).json({
-            exhibition: exhibition
-        })
     }
     catch (error) {
         res.status(500).json({
@@ -101,10 +100,13 @@ const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
         for (let i = 0; i < exhibition.length; i++) {
             const itemIdArray = exhibition[i]?.itemId
             const Items = await referenceOfExhibition(itemIdArray)
-
-            exhibition[i].itemInfo = Items
-
-
+            if (Items === -1) {
+                res.status(501).json({
+                    error: "itemId에 오류가 있습니다."
+                })
+            } else {
+                exhibition[i].itemInfo = Items
+            }
         }
         res.status(200).json({
             exhibition: exhibition
