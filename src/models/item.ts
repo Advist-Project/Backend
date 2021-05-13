@@ -35,8 +35,8 @@ const itemSchema: Schema = new Schema({
             price: { type: Number, required: true }, //상품 원가격,
             deleteYN: { type: Boolean, required: true }, //삭제여부
             discountPrice: { type: Number, required: true }, //할인된 가격을 계산한 값
-            dateStart: { type: Date, required: true }, //할인 시작날짜,
-            dateEnd: { type: Date, required: true }, //할인 마감날짜,
+            dateStart: { type: String, required: true }, //할인 시작날짜,
+            dateEnd: { type: String, required: true }, //할인 마감날짜,
         }]
 
 })
