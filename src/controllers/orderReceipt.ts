@@ -62,6 +62,43 @@ const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
     })
   }
 }
+// 코칭 날짜 저장
+const saveCoachingDate = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let { orderId, dates } = req.body
+    const userParam = {
+      coachingDates: dates
+    }
+    await orderReciptFindUpdate(orderId, userParam)
+    res.status(200).json({
+      result: "save complete",
+    })
+  }
+  catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+}
+// 코칭 상담내용 저장
+const saveConsultationOfCoaching = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let { orderId, content } = req.body
+    const userParam = {
+      coachingContent: content
+    }
+
+    await orderReciptFindUpdate(orderId, userParam)
+    res.status(200).json({
+      result: "save complete",
+    })
+  }
+  catch (error) {
+    res.status(500).json({
+      message: error.message
+    })
+  }
+}
 
 const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -118,4 +155,4 @@ const afterCompleteOrder = async (req: Request, res: Response, next: NextFunctio
   }
 }
 
-export default { checkOrder, saveUserInfo, completeOrder, afterCompleteOrder, orderReciptFindUpdate }
+export default { checkOrder, saveUserInfo, completeOrder, afterCompleteOrder, orderReciptFindUpdate, saveCoachingDate, saveConsultationOfCoaching }

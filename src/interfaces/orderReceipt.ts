@@ -31,7 +31,9 @@ export default interface OrderReceipt extends Document {
         cardNumber?: string,
         purchasedTime?: string,
         revokedTime?: string
-    }
+    },
+    coachingDates?: [string],
+    coachingContent?: string,
     //-1, 0, 1, 2
     status?: number
 }

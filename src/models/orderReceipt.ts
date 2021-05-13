@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose"
 import OrderReceipt from "../interfaces/orderReceipt"
-import moment from "moment"
-import "moment-timezone"
+import moment from "../controllers/moment"
 
 const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
@@ -35,12 +34,15 @@ const orderReceiptSchema: Schema = new Schema({
     purchasedTime: { type: String, required: false },
     revokedTime: { type: String, required: false }
   },
+
+  coachingDates: [{ type: String, required: false }],
+  coachingContent: { type: String, required: false },
   //-1, 0, 1, 2
   status: { type: Number, required: true }
 })
 
 orderReceiptSchema.pre<OrderReceipt>('save', function () {
-  this.createdAt = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
+  this.createdAt = moment.nowDateTime()
   console.log(this.createdAt)
 })
 

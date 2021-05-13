@@ -34,8 +34,8 @@ export default interface Item extends Document {
         price?: number, //상품 원가격,
         deleteYN?: boolean, //삭제여부
         discountPrice?: number, //할인된 가격을 계산한 값
-        dateStart?: Date, //할인 시작날짜,
-        dateEnd?: Date, //할인 마감날짜,
+        dateStart: string, //할인 시작날짜,
+        dateEnd: string, //할인 마감날짜,
     }]
 
 }
