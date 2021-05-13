@@ -9,23 +9,23 @@ export default interface OrderReceipt extends Document {
     receiptId?: string,
     customerOrderId?: number,
     createdAt?: string,
-    itemInfo?: {
+    itemInfo: {
         itemId?: number,
         itemImg?: string,
         itemName?: string,
         itemOwner?: string,
-        option?: {
+        option: {
             optionId?: number,
             title?: string,
             type?: string,
             desc?: string,
             file?: string,
-            price?: number,
+            price: number,
             deleteYN?: boolean,
-            discountPrice?: number
+            discountPrice: number
         }
     },
-    paymentInfo?: {
+    paymentInfo: {
         method?: string,
         cardName?: string,
         cardNumber?: string,
