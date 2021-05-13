@@ -15,7 +15,7 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
     const orderId: any = req.query.orderId
     // orderId를 기준으로 item collection에 있는 discountPrice를 가져오기 -> await로 꺼내지 않으면
     // promise객체로 나옴..
-    const order: any = await orderReceipt.findOne({ orderId: orderId })
+    const order: any = await orderReciptController.orderReciptFindOne(orderId)
     const realPrice: any = order.itemInfo.option.discountPrice
     // bootpay accesstoken
     const response = await RestClient.getAccessToken()

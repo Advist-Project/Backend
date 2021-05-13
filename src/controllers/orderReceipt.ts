@@ -5,6 +5,16 @@ import Item from "../models/item"
 import User from "../models/user"
 import orderReceipt from "../models/orderReceipt"
 
+const orderReciptFindOne = async (id: number) => {
+  try {
+    return await orderReceipt.findOne(
+      { orderId: id })
+  }
+  catch (error) {
+    console.log(error.message)
+  }
+}
+
 const orderReciptFindUpdate = async (id: number, param: any) => {
   try {
     await orderReceipt.findOneAndUpdate(
@@ -87,7 +97,6 @@ const saveConsultationOfCoaching = async (req: Request, res: Response, next: Nex
     const userParam = {
       coachingContent: content
     }
-
     await orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
@@ -123,7 +132,7 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
 const completeOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const orderId: number = parseInt(req.params.orderId)
-    const orderList: any = await orderReceipt.findOne({ orderId: orderId })
+    const orderList: any = orderReciptFindOne(orderId)
     res.status(200).json({
       order_receipts: orderList
     })
@@ -155,4 +164,14 @@ const afterCompleteOrder = async (req: Request, res: Response, next: NextFunctio
   }
 }
 
-export default { checkOrder, saveUserInfo, completeOrder, afterCompleteOrder, orderReciptFindUpdate, saveCoachingDate, saveConsultationOfCoaching }
+export default
+  {
+    orderReciptFindOne,
+    orderReciptFindUpdate,
+    checkOrder,
+    saveUserInfo,
+    completeOrder,
+    afterCompleteOrder,
+    saveCoachingDate,
+    saveConsultationOfCoaching,
+  }
