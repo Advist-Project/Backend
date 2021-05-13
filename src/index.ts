@@ -5,6 +5,7 @@ import config from "./config/config"
 import payRoutes from "./routes/pay"
 import itemRoutes from "./routes/item"
 import exhibitionRoutes from "./routes/exhibition"
+import myPageRoutes from "./routes/myPage"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 
@@ -85,6 +86,8 @@ app.use("/user", userRoutes)
 app.use("/pay", payRoutes)
 app.use("/item", itemRoutes)
 app.use("/exhibition", exhibitionRoutes)
+app.use("/mypage", myPageRoutes)
+
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const error = new Error("Not Found")
