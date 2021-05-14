@@ -11,7 +11,7 @@ const orderReciptFindOne = async (id: number) => {
       { orderId: id })
   }
   catch (error) {
-    console.log(error.message)
+    console.log("orderReciptFindOne" + error.message)
   }
 }
 
@@ -23,7 +23,7 @@ const orderReciptFindUpdate = async (id: number, param: any) => {
       { new: true })
   }
   catch (error) {
-    console.log(error.message)
+    console.log("orderReciptFindUpdate" + error.message)
   }
 }
 

@@ -18,6 +18,7 @@ const findPaymentHistory = async (userId: number) => {
         else return paymentHistroy
     }
     catch (error) {
+        console.log(error.message)
         return 0
     }
 }

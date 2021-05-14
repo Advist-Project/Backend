@@ -52,7 +52,7 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
         }
     }
     catch (error) {
-        console.log(error.message)
+        console.log("referenceOfExhibition" + error.message)
         return 0
     }
 }
