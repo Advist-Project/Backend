@@ -15,5 +15,5 @@ export default interface Exhibition extends Document {
         //1, 2, 3
         //모든 정보 필요
     ],
-    itemInfo?: [object]
+    itemInfo: [object]
 }

@@ -52,7 +52,8 @@ const referenceOfExhibition = async (itemIds?: Array<number>) => {
         }
     }
     catch (error) {
-        return error.message
+        console.log(error.message)
+        return 0
     }
 }
 
@@ -60,7 +61,7 @@ const bestExhibition = async (req: Request, res: Response, next: NextFunction) =
     try {
         const exhibition = await Exhibition.findOne({ rank: 1 })
         const itemIdArray = exhibition?.itemId
-        const Items = await referenceOfExhibition(itemIdArray)
+        const Items: any = await referenceOfExhibition(itemIdArray)
         if (Items === -1) {
             res.status(501).json({
                 error: "itemId에 오류가 있습니다."
@@ -99,10 +100,14 @@ const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
         // iteminfo 붙이는 로직
         for (let i = 0; i < exhibition.length; i++) {
             const itemIdArray = exhibition[i]?.itemId
-            const Items = await referenceOfExhibition(itemIdArray)
+            const Items: any = await referenceOfExhibition(itemIdArray)
             if (Items === -1) {
                 res.status(501).json({
                     error: "itemId에 오류가 있습니다."
+                })
+            } else if (Items === 0) {
+                res.status(502).json({
+                    error: "itemId와 itemInfo매칭에 오류가 생김"
                 })
             } else {
                 exhibition[i].itemInfo = Items
