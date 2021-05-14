@@ -3,12 +3,14 @@ import orderReceipt from "../models/orderReceipt"
 import orderReceiptController from "./orderReceipt"
 import _ from "lodash"
 
-// userId로 table찾기 (status = 1 또는 2 => 프론트에서 결제 완료 api호출 했으면 2만 )
+// userId로 table찾기 
+// status = 1 또는 2 => 프론트에서 결제 완료 api호출 했으면 2만
+// status = 3 => 변심에 대한 환불 + 기타)
 // 날짜 순으로 내림차순
 const findPaymentHistory = async (userId: number) => {
     try {
         const paymentHistroy = await orderReceipt.find({ userId: userId })
-            .where("status").in([1, 2])
+            .where("status").in([1, 2, 3])
             .sort({ "paymentInfo.purchasedTime": -1 })
 
         // 구매 내역이 없는 경우
@@ -17,6 +19,22 @@ const findPaymentHistory = async (userId: number) => {
     }
     catch (error) {
         return 0
+    }
+}
+const checkStatus = async (status: any) => {
+    try {
+
+        if (status === 3)
+            return "환불 완료"
+        else if (status === 2 || status === 1)
+            return "결제 완료"
+        else if (status === 0)
+            return "검증 실패 후 취소완료"
+        else
+            return "결제프로세스 중단"
+    }
+    catch (error) {
+        return "status번호가 잘못됨"
     }
 }
 
@@ -37,13 +55,14 @@ const getMyPaymentHistory = async (req: Request, res: Response, next: NextFuncti
         } else {
             const paymentHistroy: Array<object> = []
             for (let i = 0; i < payment.length; i++) {
+
                 let history = {
                     "orderId": payment[i]["orderId"],
                     "purchasedTime": payment[i]["paymentInfo"]["purchasedTime"],
                     "img": payment[i]["itemInfo"]["itemImg"],
                     "itemName": payment[i]["itemInfo"]["itemName"],
                     "price": payment[i]["itemInfo"]["option"]["discountPrice"],
-                    "status": "구매완료"
+                    "status": await checkStatus(payment[i]["status"])
                 }
                 paymentHistroy[i] = history
             }
@@ -91,4 +110,4 @@ const getDetailOfMyPaymentHistory = async (req: Request, res: Response, next: Ne
         })
     }
 }
-export default { getMyPaymentHistory, getDetailOfMyPaymentHistory, findPaymentHistory }
+export default { getMyPaymentHistory, getDetailOfMyPaymentHistory, findPaymentHistory, checkStatus }
