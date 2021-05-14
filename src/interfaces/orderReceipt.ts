@@ -3,10 +3,10 @@ import { Document } from 'mongoose'
 export default interface OrderReceipt extends Document {
     orderId?: number,
     userId?: number,
-    userEmail?: string,
+    userEmail: string,
     userName?: string,
     userPhone?: string,
-    receiptId?: string,
+    receiptId: string,
     customerOrderId?: number,
     createdAt?: string,
     itemInfo: {
@@ -30,7 +30,8 @@ export default interface OrderReceipt extends Document {
         cardName?: string,
         cardNumber?: string,
         purchasedTime?: string,
-        revokedTime?: string
+        revokedTime?: string,
+        revokedReason?: string
     },
     coachingDates?: [string],
     coachingContent?: string,
