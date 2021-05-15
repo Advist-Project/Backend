@@ -71,6 +71,7 @@ const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next:
             })
         } else {
             const paymentDetail = {
+                "orderId": payment.orderId,
                 "orderIdForCustomer": payment.customerOrderId,
                 "status": payment.status,
                 "createdOrderTime": payment.createdAt || "",
