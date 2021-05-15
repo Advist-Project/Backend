@@ -7,40 +7,46 @@ import Item from "../models/item"
 //할인 기간 중 -> 할인 가격 
 //할인 기간 아니면 -> 원래 가격 
 const isOkOptions = async (options: any, itemId: number) => {
-    const realOptions: Array<object> = []
-    let index = 0
-    for (let i = 0; i < options.length; i++) {
-        let isEffectiveDate = Moment.effectiveDate(options[i].dateStart, options[i].dateEnd)
-        // 할인기간이 끝났거나, 아직 안됬을 경우 && 이미 할인가격을 안바꾼 경우
-        const price = options[i].price
-        const discountPrice = options[i].discountPrice
+    try {
+        const realOptions: Array<object> = []
+        let index = 0
+        for (let i = 0; i < options.length; i++) {
+            let isEffectiveDate = Moment.effectiveDate(options[i].dateStart, options[i].dateEnd)
+            // 할인기간이 끝났거나, 아직 안됬을 경우 && 이미 할인가격을 안바꾼 경우
+            const price = options[i].price
+            const discountPrice = options[i].discountPrice
 
-        if (price != discountPrice && !isEffectiveDate) {
+            if (price != discountPrice && !isEffectiveDate) {
 
-            // 할인 가격을 원가격으로 바꿔놓기
-            options[i].discountPrice = price
+                // 할인 가격을 원가격으로 바꿔놓기
+                options[i].discountPrice = price
 
-            // db에도 update하기 -> return 값 필요 없을때 updateOne
-            await Item.updateOne(
-                {
-                    itemId: itemId,
-                    // optionId = 1부터 시작
-                    "options.optionId": i + 1
-                },
-                {
-                    $set: { "options.$.discountPrice": price }
-                }
-            )
+                // db에도 update하기 -> return 값 필요 없을때 updateOne
+                await Item.updateOne(
+                    {
+                        itemId: itemId,
+                        // optionId = 1부터 시작
+                        "options.optionId": i + 1
+                    },
+                    {
+                        $set: { "options.$.discountPrice": price }
+                    }
+                )
 
+            }
+
+            // 삭제되지 않은 것만 realOption에 넣기
+            if (options[i].deleteYN === false) {
+                realOptions[index] = options[i]
+                index++
+            }
         }
-
-        // 삭제되지 않은 것만 realOption에 넣기
-        if (options[i].deleteYN === false) {
-            realOptions[index] = options[i]
-            index++
-        }
+        return realOptions
     }
-    return realOptions
+    catch (error) {
+        console.log("isOkOptions :" + error.message)
+        return -1
+    }
 }
 
 const getItem = async (req: Request, res: Response, next: NextFunction) => {
@@ -68,7 +74,12 @@ const getItem = async (req: Request, res: Response, next: NextFunction) => {
             })
         } else {
             const realOption = await isOkOptions(options, itemId)
-            if (realOption === undefined) {
+            if (realOption === -1) {
+                res.status(503).json({
+                    error: "options또는 itemId가 잘못되었습니다."
+                })
+            }
+            else if (realOption === undefined) {
                 res.status(502).json({
                     error: "조건에 맞는 option이 하나도 없습니다."
                 })

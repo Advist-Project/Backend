@@ -32,7 +32,8 @@ const orderReceiptSchema: Schema = new Schema({
     cardName: { type: String, required: false },
     cardNumber: { type: String, required: false },
     purchasedTime: { type: String, required: false },
-    revokedTime: { type: String, required: false }
+    revokedTime: { type: String, required: false },
+    revokedReason: { type: String, required: false }
   },
 
   coachingDates: [{ type: String, required: false }],

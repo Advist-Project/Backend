@@ -11,7 +11,7 @@ const orderReciptFindOne = async (id: number) => {
       { orderId: id })
   }
   catch (error) {
-    console.log(error.message)
+    console.log("orderReciptFindOne" + error.message)
   }
 }
 
@@ -23,7 +23,7 @@ const orderReciptFindUpdate = async (id: number, param: any) => {
       { new: true })
   }
   catch (error) {
-    console.log(error.message)
+    console.log("orderReciptFindUpdate" + error.message)
   }
 }
 
@@ -112,11 +112,15 @@ const saveConsultationOfCoaching = async (req: Request, res: Response, next: Nex
 const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let { orderId, userId, userName, userPhone } = req.body
+    const user = {
+      name: userName,
+      phone: userPhone
+    }
     const userParam = {
       userName: userName,
       userPhone: userPhone
     }
-    await User.findOneAndUpdate({ userId: userId }, { $set: userParam }, { new: true })
+    await User.findOneAndUpdate({ userId: userId }, { $set: user }, { new: true })
     await orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",

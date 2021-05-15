@@ -12,7 +12,7 @@ export default async function getNextSequence(id: string) {
       return result.seq
     }
   } catch (error) {
-    console.log(error.message)
+    console.log("getNextSequence" + error.message)
     return error.message
   }
 }
