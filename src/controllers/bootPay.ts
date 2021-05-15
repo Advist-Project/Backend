@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { RestClient } from "@bootpay/server-rest-client"
 import config from "../config/config"
-import orderReceipt from "../models/orderReceipt"
 import orderReciptController from "./orderReceipt"
 
 const payVerify = async (req: Request, res: Response, next: NextFunction) => {
@@ -82,7 +81,6 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
               message: "Fail to cancel"
             })
           }
-
         }
       }
     }
@@ -94,15 +92,13 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-// 아직 안씀
-const payCancel = async (req: Request, res: Response, next: NextFunction) => {
+const payCancel = async (orderId: number, receiptId: string, price: number, name: string, reason: string) => {
   try {
     RestClient.setConfig(
       config.bootpay.restApplicationID,
       config.bootpay.privateKey
     )
     const token = await RestClient.getAccessToken()
-    let { receiptId, price, name, reason } = req.body
     if (token.status === 200) {
       // 보내주는 값
       const response = await RestClient.cancel({
@@ -112,18 +108,22 @@ const payCancel = async (req: Request, res: Response, next: NextFunction) => {
         reason: reason,
       })
       if (response.status === 200) {
-        // 해당 orderReceipt는 사용하지 않는 것. (status : 1 -> 2)
-        await orderReceipt.findOneAndUpdate({ receiptId: receiptId }, { $set: { status: 2 } }, { new: true })
+        // status = 3 사람 변심, 관리자가 환불
+        const cancelParams = {
+          status: 3,
+          "paymentInfo.revokedTime": response.data.revoked_at,
+          "paymentInfo.revokedReason": reason
+        }
+        await orderReciptController.orderReciptFindUpdate(orderId, cancelParams)
         console.log("success cancel" + response)
+
       }
-    }
+    } return 0
   }
   catch (error) {
-    res.status(500).json({
-      message: error.message
-    })
+    console.log(error.message)
+    return error
   }
-
 }
 
 export default { payVerify, payCancel }

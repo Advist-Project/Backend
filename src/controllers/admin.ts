@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import _ from "lodash"
 import orderReceipt from "../models/orderReceipt"
+import bootPay from "./bootPay"
 import mypageController from "./myPage"
 import orderReceiptController from "./orderReceipt"
 
@@ -13,6 +14,7 @@ const findAdminPaymentHistory = async () => {
         else return paymentHistroy
     }
     catch (error) {
+        console.log("findAdminPaymentHistory" + error.message)
         return 0
     }
 }
@@ -70,6 +72,7 @@ const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next:
         } else {
             const paymentDetail = {
                 "orderIdForCustomer": payment.customerOrderId,
+                "status": payment.status,
                 "createdOrderTime": payment.createdAt || "",
                 "userName": payment.userName || "",
                 "userEmail": payment.userEmail,
@@ -85,7 +88,8 @@ const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next:
                 "payMethod": payment.paymentInfo.method || "",
                 "bootPayReceiptId": payment.receiptId || "",
                 "purchasedTime": payment.paymentInfo.purchasedTime || "",
-                "revokedTime": payment.paymentInfo.revokedTime || ""
+                "revokedTime": payment.paymentInfo.revokedTime || "",
+                "revokedReason": payment.paymentInfo.revokedReason || ""
             }
             res.status(200).json({
                 result: paymentDetail
@@ -99,4 +103,37 @@ const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next:
         })
     }
 }
-export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory }
+
+// 환불하기
+const refund = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let { orderId, reason } = req.body
+        const order = await orderReceiptController.orderReciptFindOne(orderId)
+        if (order === null || order === undefined) {
+            res.status(501).json({
+                error: "해당 orderReceipt를 찾지 못했습니다"
+            })
+        } else {
+            const receiptId = order.receiptId
+            const price = order.itemInfo.option.discountPrice
+            const email = order.userEmail
+            const cancelResult = await bootPay.payCancel(orderId, receiptId, price, email, reason)
+            if (cancelResult === 0) {
+                res.status(200).json({
+                    result: " 환불 완료"
+                })
+            } else {
+                res.status(502).json({
+                    error: "환불 중 오류"
+                })
+            }
+        }
+
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund }

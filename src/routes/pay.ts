@@ -4,7 +4,6 @@ import orderReceiptController from "../controllers/orderReceipt"
 
 const router = express.Router()
 
-router.post("/cancel", bootPayController.payCancel)
 router.get("/verify/:receiptId", bootPayController.payVerify)
 
 router.get("/checkorder/:userId", orderReceiptController.checkOrder)
