@@ -50,6 +50,7 @@ app.use((req: any, res: any, next: any) => {
     'https://advist.kr',
     'https://www.advist.kr',
     'https://advist-admin.vercel.app',
+    'http://localhost:8081'
   ]
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
     res.header('Access-Control-Allow-Origin', req.headers.origin)
