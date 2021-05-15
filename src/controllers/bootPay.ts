@@ -121,7 +121,7 @@ const payCancel = async (orderId: number, receiptId: string, price: number, name
     } return 0
   }
   catch (error) {
-    console.log(error.message)
+    console.log("payCancel" + error.message)
     return error
   }
 }
