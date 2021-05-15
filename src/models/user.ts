@@ -37,6 +37,14 @@ const user = new mongoose.Schema({
         required: false,
         type: String
     },
+    orderIds: [{
+        required: false,
+        type: Number
+    }], //구매내역
+    likeItemIds: [{
+        required: false,
+        type: Number
+    }] //찜한내역
 
 })
 
