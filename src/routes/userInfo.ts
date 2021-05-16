@@ -3,6 +3,6 @@ import userInfoController from "../controllers/userInfo"
 
 const router = express.Router()
 
-router.get("/onboarding", userInfoController.loginOnboarding)
+router.post("/onboarding", userInfoController.loginOnboarding)
 
 export = router

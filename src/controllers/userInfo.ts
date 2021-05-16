@@ -33,6 +33,7 @@ const loginOnboarding = async (req: Request, res: Response, next: NextFunction) 
             jobDepartment: jobDepartment,
             career: career
         }
+        console.log(params)
         await userFindUpdate(userId, params)
         res.status(200).json({
             result: "온보딩 update 성공"

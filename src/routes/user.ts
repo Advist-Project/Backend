@@ -1,35 +1,32 @@
 import express from "express"
-import userInfo from "../controllers/userInfo"
 var router = express.Router()
 module.exports = function (passport) {
 
-  const toJson = (req, res) => {
+  const canPassOnboarding = (req): boolean => {
+    // json문자열로 변환
     const userJsonString = JSON.stringify(req.user)
+    // json object로 변환
     const userJson = JSON.parse(userJsonString)
-    console.log(userJson.orderIds)
-    console.log(userJson.company)
-    console.log(userJson.email)
-    if (userJson.company === undefined || userJson.company === "")
-      return 0;
+    const company = userJson.company || ""
+    const realEmail = userJson.realEmail || ""
+    const jobDepartment = userJson.jobDepartment || ""
+    const career = userJson.career || ""
+    if (company === "" || realEmail === "" || jobDepartment === "" || career === "")
+      return false;
     else
-      return 1;
+      return true;
   }
 
   router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
   router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      console.log("req.user = " + req.user)
-      // const userJsonString = JSON.stringify(req.user)
-      // const userJson = JSON.parse(userJsonString)
-      // console.log(userJson.orderIds)
-      // console.log(userJson.company)
-      // console.log(userJson.email)
-      if (toJson(req, res) === 0) {
-        console.log("값이 없습니다")
+      if (!canPassOnboarding(req)) {
+        console.log("값이 하나라도 없습니다")
+        // 로그인 온보딩 페이지 필요
         res.redirect('https://www.advist.kr')
       } else {
-        console.log("호호호")
+        console.log("로그인 온보딩 값이 다 있습니다")
         res.redirect('https://www.advist.kr')
       }
 
@@ -39,7 +36,15 @@ module.exports = function (passport) {
   router.get('/auth/kakao/callback',
     passport.authenticate('kakao', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      res.redirect('https://www.advist.kr')
+      if (!canPassOnboarding(req)) {
+        console.log("값이 하나라도 없습니다")
+        // 로그인 온보딩 페이지 필요
+        res.redirect('https://www.advist.kr')
+      } else {
+        console.log("로그인 온보딩 값이 다 있습니다")
+        res.redirect('https://www.advist.kr')
+      }
+
     })
 
 
@@ -48,7 +53,15 @@ module.exports = function (passport) {
   router.get('/auth/naver/callback',
     passport.authenticate('naver', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      res.redirect('https://www.advist.kr')
+      if (!canPassOnboarding(req)) {
+        console.log("값이 하나라도 없습니다")
+        // 로그인 온보딩 페이지 필요
+        res.redirect('https://www.advist.kr')
+      } else {
+        console.log("로그인 온보딩 값이 다 있습니다")
+        res.redirect('https://www.advist.kr')
+      }
+
     })
 
   router.get("/getuser", (req, res) => {
