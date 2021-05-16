@@ -9,7 +9,10 @@ module.exports = function (passport) {
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
       console.log(res)
-      res.redirect('https://frontend-git-develop-advi33.vercel.app')
+      // res.redirect('https://frontend-git-develop-advi33.vercel.app')
+      res.status(200).json({
+        result: "로그인 완료"
+      })
     })
   router.get('/auth/kakao', passport.authenticate('kakao'))
 
