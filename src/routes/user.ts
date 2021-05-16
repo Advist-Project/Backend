@@ -17,7 +17,11 @@ module.exports = function (passport) {
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
       console.log("req.user = " + req.user)
-      console.log("JSON.req.user = " + JSON.stringify(req.user))
+      const userJsonString = JSON.stringify(req.user)
+      const userJson = JSON.parse(userJsonString)
+      console.log(userJson.orderIds)
+      console.log(userJson.company)
+      console.log(userJson.email)
       res.redirect('https://www.advist.kr')
     })
   router.get('/auth/kakao', passport.authenticate('kakao'))
