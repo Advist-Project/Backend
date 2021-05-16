@@ -136,7 +136,7 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
 const completeOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const orderId: number = parseInt(req.params.orderId)
-    const orderList: any = orderReciptFindOne(orderId)
+    const orderList: any = await orderReciptFindOne(orderId)
     res.status(200).json({
       order_receipts: orderList
     })
