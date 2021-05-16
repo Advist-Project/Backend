@@ -77,6 +77,7 @@ const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next:
                 "createdOrderTime": payment.createdAt || "",
                 "userName": payment.userName || "",
                 "userEmail": payment.userEmail,
+                "realUserEmail": payment.realUserEmail || "",
                 "userPhone": payment.userPhone || "",
                 "itemName": payment.itemInfo.itemName,
                 "optionName": payment.itemInfo.option.title,

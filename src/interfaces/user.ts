@@ -8,6 +8,10 @@ export interface IMongoDBUser {
     thumbnail?: string,
     name?: string,
     phone?: string,
+    company?: string,
+    jobDepartment?: string,
+    career?: string,
+    realEmail?: string,
     __v?: number,
     _id?: string,
     orderIds?: [number], //구매내역

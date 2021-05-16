@@ -7,6 +7,7 @@ import itemRoutes from "./routes/item"
 import exhibitionRoutes from "./routes/exhibition"
 import myPageRoutes from "./routes/myPage"
 import adminRoutes from "./routes/admin"
+import userInfoRoutes from "./routes/userInfo"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 
@@ -86,6 +87,7 @@ app.get(
   }
 )
 app.use("/user", userRoutes)
+app.use("/userinfo", userInfoRoutes)
 app.use("/pay", payRoutes)
 app.use("/item", itemRoutes)
 app.use("/exhibition", exhibitionRoutes)

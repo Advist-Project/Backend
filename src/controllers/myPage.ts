@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import orderReceipt from "../models/orderReceipt"
 import orderReceiptController from "./orderReceipt"
 import _ from "lodash"
-import user from "../models/user"
+import userInfoController from "./userInfo"
 
 // userId로 table찾기 
 // status = 1 또는 2 => 프론트에서 결제 완료 api호출 했으면 2만
@@ -74,7 +74,7 @@ const getMyPaymentHistory = async (req: Request, res: Response, next: NextFuncti
                 paymentHistroy[i] = history
             }
             // user테이블에 구매내역 update
-            await user.updateOne({ userId: userId }, { $set: { orderIds: orders } })
+            await userInfoController.userFindUpdate(userId, { orderIds: orders })
 
             res.status(200).json({
                 result: paymentHistroy
