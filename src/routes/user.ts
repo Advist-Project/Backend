@@ -8,18 +8,14 @@ module.exports = function (passport) {
   router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      console.log(res)
-      // res.redirect('https://frontend-git-develop-advi33.vercel.app')
-      res.status(200).json({
-        result: "로그인 완료"
-      })
+      res.redirect('https://www.advist.kr')
     })
   router.get('/auth/kakao', passport.authenticate('kakao'))
 
   router.get('/auth/kakao/callback',
     passport.authenticate('kakao', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      res.redirect('https://frontend-git-develop-advi33.vercel.app')
+      res.redirect('https://www.advist.kr')
     })
 
 
@@ -28,7 +24,7 @@ module.exports = function (passport) {
   router.get('/auth/naver/callback',
     passport.authenticate('naver', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      res.redirect('https://frontend-git-develop-advi33.vercel.app')
+      res.redirect('https://www.advist.kr')
     })
 
   router.get("/getuser", (req, res) => {
