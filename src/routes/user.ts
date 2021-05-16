@@ -8,6 +8,7 @@ module.exports = function (passport) {
   router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
+      console.log(res)
       res.redirect('https://frontend-git-develop-advi33.vercel.app')
     })
   router.get('/auth/kakao', passport.authenticate('kakao'))
