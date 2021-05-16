@@ -16,7 +16,8 @@ module.exports = function (passport) {
   router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
-      console.log(res)
+      console.log("passport = " + passport)
+      console.log("req.user = " + req.user)
       res.redirect('https://www.advist.kr')
     })
   router.get('/auth/kakao', passport.authenticate('kakao'))
