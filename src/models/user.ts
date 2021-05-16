@@ -37,6 +37,30 @@ const user = new mongoose.Schema({
         required: false,
         type: String
     },
+    realEmail: {
+        required: false,
+        type: String
+    },
+    company: {
+        required: false,
+        type: String
+    },
+    jobDepartment: {
+        required: false,
+        type: String
+    },
+    career: {
+        required: false,
+        type: String
+    },
+    orderIds: [{
+        required: false,
+        type: Number
+    }], //구매내역
+    likeItemIds: [{
+        required: false,
+        type: Number
+    }] //찜한내역
 
 })
 

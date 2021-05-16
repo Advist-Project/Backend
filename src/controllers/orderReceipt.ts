@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express"
 import OrderReceipt from "../models/orderReceipt"
 import getNextSequence from "./counter"
 import Item from "../models/item"
-import User from "../models/user"
 import orderReceipt from "../models/orderReceipt"
+import userInfoController from "./userInfo"
 
 const orderReciptFindOne = async (id: number) => {
   try {
@@ -30,7 +30,7 @@ const orderReciptFindUpdate = async (id: number, param: any) => {
 const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: number = parseInt(req.params.userId)
-    const user: any = await User.findOne({ userId: userId })
+    const user: any = await userInfoController.userFindOne(userId)
     const userEmail: string = user.email
     const itemId: any = req.query.itemId
     const item: any = await Item.findOne({ itemId: itemId })
@@ -120,7 +120,7 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
       userName: userName,
       userPhone: userPhone
     }
-    await User.findOneAndUpdate({ userId: userId }, { $set: user }, { new: true })
+    await userInfoController.userFindUpdate(userId, user)
     await orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
@@ -136,7 +136,7 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
 const completeOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const orderId: number = parseInt(req.params.orderId)
-    const orderList: any = orderReciptFindOne(orderId)
+    const orderList: any = await orderReciptFindOne(orderId)
     res.status(200).json({
       order_receipts: orderList
     })

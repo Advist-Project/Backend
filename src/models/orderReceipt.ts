@@ -6,6 +6,7 @@ const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
   userId: { type: Number, required: true },
   userEmail: { type: String, required: true },
+  realUserEmail: { type: String, required: false },
   userName: { type: String, required: false },
   userPhone: { type: String, required: false },
   receiptId: { type: String, required: false },
