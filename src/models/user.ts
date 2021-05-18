@@ -37,10 +37,6 @@ const user = new mongoose.Schema({
         required: false,
         type: String
     },
-    realEmail: {
-        required: false,
-        type: String
-    },
     company: {
         required: false,
         type: String

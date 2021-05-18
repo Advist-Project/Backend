@@ -57,9 +57,8 @@ const userFindUpdate = async (id: number, param: any) => {
 // user에 온보딩 결과 값 넣기
 const postLoginOnboarding = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let { userId, realEmail, company, jobDepartment, career } = req.body
+        let { userId, company, jobDepartment, career } = req.body
         const params = {
-            realEmail: realEmail,
             company: company,
             jobDepartment: jobDepartment,
             career: career

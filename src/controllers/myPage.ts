@@ -11,7 +11,7 @@ import userInfoController from "./userInfo"
 const findPaymentHistory = async (userId: number) => {
     try {
         const paymentHistroy = await orderReceipt.find({ userId: userId })
-            .where("status").in([1, 2, 3])
+            .where("status").in([1, 2, 3, 4])
             .sort({ "paymentInfo.purchasedTime": -1 })
 
         // 구매 내역이 없는 경우
@@ -28,6 +28,8 @@ const checkStatus = async (status: any) => {
 
         if (status === 3)
             return "환불 완료"
+        else if (status === 4)
+            return "후기 작성 완료"
         else if (status === 2 || status === 1)
             return "결제 완료"
         else if (status === 0)
@@ -59,7 +61,8 @@ const getMyPaymentHistory = async (req: Request, res: Response, next: NextFuncti
             const paymentHistroy: Array<object> = []
             let index = 0
             for (let i = 0; i < payment.length; i++) {
-                if (payment[i]["status"] === 2 || payment[i]["status"] === 1) {
+                // 완전히 구매한 내역만 (환불한거 제외)
+                if (payment[i]["status"] === 2 || payment[i]["status"] === 1 || payment[i]["status"] === 4) {
                     orders[index] = payment[i]["orderId"]
                     index++
                 }

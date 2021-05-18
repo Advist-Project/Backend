@@ -2,7 +2,7 @@ import { Document } from 'mongoose'
 
 export default interface OrderReceipt extends Document {
     orderId: number,
-    userId?: number,
+    userId: number,
     userEmail: string,
     realUserEmail?: string,
     userName?: string,
