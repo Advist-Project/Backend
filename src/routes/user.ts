@@ -9,10 +9,9 @@ module.exports = function (passport) {
     // json object로 변환
     const userJson = JSON.parse(userJsonString)
     const company = userJson.company || ""
-    const realEmail = userJson.realEmail || ""
     const jobDepartment = userJson.jobDepartment || ""
     const career = userJson.career || ""
-    if (company === "" || realEmail === "" || jobDepartment === "" || career === "")
+    if (company === "" && jobDepartment === "" && career === "")
       return false;
     else
       return true;
@@ -23,7 +22,7 @@ module.exports = function (passport) {
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
       if (!canPassOnboarding(req)) {
-        console.log("값이 하나라도 없습니다")
+        console.log("값이 하나도 없습니다")
         // 로그인 온보딩 페이지 필요
         res.redirect('https://www.advist.kr')
       } else {
