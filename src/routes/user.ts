@@ -35,8 +35,10 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
-        res.redirect(req.session["redirect_override"] || "https://www.advist.kr");
-        req.session["redirect_override"] = "";
+        console.log("뀨" + req.session["redirect_override"])
+        res.redirect(req.session["redirect_override"] || "https://www.advist.kr")
+        req.session["redirect_override"] = ""
+        console.log("뀨2" + req.session["redirect_override"])
       }
 
     })
