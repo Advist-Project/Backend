@@ -8,7 +8,9 @@ module.exports = function (passport) {
       req.session["redirect_override"] = req.get('Referrer')
       console.log('Referrer set to:', req.get('Referrer'))
     }
-    next()
+    res.status(200).json({
+      result: "경로 저장 성공"
+    })
   })
 
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
