@@ -7,7 +7,7 @@ const itemSchema: Schema = new Schema({
     owner: { type: String, required: true },
     label: { type: String, required: true },
     // 함수 필요
-    likes: { type: Number, required: true },
+    likes: { type: Number, required: true, default: 0 },
     coachImg: { type: String, required: false }, //코치 설명 이미지,
     commentImg: { type: String, required: false }, //후기 이미지,
     // detail page에 있는 양식 or 예시의 image와 설명(title)
