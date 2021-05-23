@@ -4,7 +4,7 @@ module.exports = function (passport) {
 
   router.get('/login', (req: any, res, next) => {
     console.log("되긴 함? " + req.get('Referrer'))
-    if (req.get('Referrer').includes('google.com') === false) {
+    if (req.get('Referrer')) {
       req.session["redirect_override"] = req.get('Referrer')
       console.log('Referrer set to:', req.get('Referrer'))
     }
@@ -48,7 +48,7 @@ module.exports = function (passport) {
         console.log("뀨" + req.session["redirect_override"])
         res.redirect(req.session["redirect_override"] || "https://www.advist.kr")
         req.session["redirect_override"] = ""
-        console.log("뀨2" + req.session._id)
+        console.log("뀨2" + req.session.id)
       }
 
     })
