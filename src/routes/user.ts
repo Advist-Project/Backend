@@ -13,13 +13,19 @@ module.exports = function (passport) {
     const jobDepartment = userJson.jobDepartment || ""
     const career = userJson.career || ""
     if (company === "" && jobDepartment === "" && career === "")
-      return false;
+      return false
     else
-      return true;
+      return true
   }
 
   router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
-  router.get('/auth/google/callback',
+  router.get('/auth/google/callback', (req: any, res, next) => {
+    if (req.get('Referrer').includes('google.com') === false) {
+      req.session["redirect_override"] = req.get('Referrer')
+      console.log('Referrer set to:', req.get('Referrer'))
+    }
+    next()
+  },
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
       if (!canPassOnboarding(req)) {
@@ -28,8 +34,8 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
-        console.log(req.path)
-        res.redirect('https://www.advist.kr')
+        res.redirect(req.session["redirect_override"] || "/");
+        req.session["redirect_override"] = "";
       }
 
     })
