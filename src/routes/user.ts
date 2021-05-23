@@ -38,7 +38,7 @@ module.exports = function (passport) {
         console.log("뀨" + req.session["redirect_override"])
         res.redirect(req.session["redirect_override"] || "https://www.advist.kr")
         req.session["redirect_override"] = ""
-        console.log("뀨2" + req.session["redirect_override"])
+        console.log("뀨2" + req.session)
       }
 
     })
