@@ -2,6 +2,14 @@ import express from "express"
 var router = express.Router()
 module.exports = function (passport) {
 
+  router.get('/login', (req: any, res, next) => {
+    console.log("되긴 함? " + req.get('Referrer'))
+    if (req.get('Referrer').includes('google.com') === false) {
+      req.session["redirect_override"] = req.get('Referrer')
+      console.log('Referrer set to:', req.get('Referrer'))
+    }
+    next()
+  })
 
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
@@ -18,14 +26,16 @@ module.exports = function (passport) {
       return true
   }
 
-  router.get('/auth/google', (req: any, res, next) => {
-    console.log("되긴 함? " + req.get('Referrer'))
-    if (req.get('Referrer').includes('google.com') === false) {
-      req.session["redirect_override"] = req.get('Referrer')
-      console.log('Referrer set to:', req.get('Referrer'))
-    }
-    next()
-  }, passport.authenticate('google', { scope: ['email', 'profile'] }))
+  router.get('/auth/google',
+    // (req: any, res, next) => {
+    // console.log("되긴 함? " + req.get('Referrer'))
+    // if (req.get('Referrer').includes('google.com') === false) {
+    //   req.session["redirect_override"] = req.get('Referrer')
+    //   console.log('Referrer set to:', req.get('Referrer'))
+    // }
+    // next()
+    // },
+    passport.authenticate('google', { scope: ['email', 'profile'] }))
   router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
     function (req, res) {
@@ -38,7 +48,7 @@ module.exports = function (passport) {
         console.log("뀨" + req.session["redirect_override"])
         res.redirect(req.session["redirect_override"] || "https://www.advist.kr")
         req.session["redirect_override"] = ""
-        console.log("뀨2" + req.session)
+        console.log("뀨2" + req.session._id)
       }
 
     })
