@@ -2,6 +2,7 @@ import express from "express"
 var router = express.Router()
 module.exports = function (passport) {
 
+
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
     // json문자열로 변환
@@ -27,6 +28,7 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
+        console.log(req.path)
         res.redirect('https://www.advist.kr')
       }
 
