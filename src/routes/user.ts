@@ -20,7 +20,7 @@ module.exports = function (passport) {
 
   router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
   router.get('/auth/google/callback', (req: any, res, next) => {
-    console.log("되긴 함?")
+    console.log("되긴 함? " + req.get('Referrer'))
     if (req.get('Referrer').includes('google.com') === false) {
       req.session["redirect_override"] = req.get('Referrer')
       console.log('Referrer set to:', req.get('Referrer'))
