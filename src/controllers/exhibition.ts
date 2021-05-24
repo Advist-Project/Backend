@@ -123,4 +123,4 @@ const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
         })
     }
 }
-export default { bestExhibition, exhibitions }
+export default { referenceOfExhibition, bestExhibition, exhibitions }

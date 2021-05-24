@@ -6,7 +6,7 @@ export default interface Item extends Document {
     owner?: string, //상품 제작자,
     label?: string, //라벨 이름(NEW, BEST, null),
     // 함수 필요
-    likes?: number, //좋아요,
+    likes: number, //좋아요,
     coachImg?: string, //코치 설명 이미지,
     commentImg?: string, //후기 이미지,  
     // detail page에 있는 양식 or 예시의 image와 설명(title)

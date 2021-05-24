@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express"
+import _ from "lodash"
 import orderReceipt from "../models/orderReceipt"
 import orderReceiptController from "./orderReceipt"
-import _ from "lodash"
 import userInfoController from "./userInfo"
+import itemController from "./item"
+import exhibitionController from "./exhibition"
 
 // userId로 table찾기 
 // status = 1 또는 2 => 프론트에서 결제 완료 api호출 했으면 2만
@@ -123,4 +125,71 @@ const getDetailOfMyPaymentHistory = async (req: Request, res: Response, next: Ne
         })
     }
 }
-export default { getMyPaymentHistory, getDetailOfMyPaymentHistory, findPaymentHistory, checkStatus }
+
+// 찜한 내역 모두 보여 주기
+const likesList = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.userId)
+        const info: any = await userInfoController.userFindOne(userId)
+        // likeItemIds배열 저장
+        const likes = info.likeItemIds
+        // 찜한 내역이 없는 경우
+        if (_.isEmpty(likes)) {
+            res.status(201).json({
+                result: "찜한 내역이 없습니다."
+            })
+        } else {
+            // 찜한 itemId와 item들을 mapping시키기
+            const likeItem: any = await exhibitionController.referenceOfExhibition(likes)
+            if (likeItem === -1) {
+                res.status(501).json({
+                    error: "itemId에 오류가 있습니다."
+                })
+            } else {
+                res.status(200).json({
+                    result: likeItem
+                })
+            }
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+
+// 찜한 내역 모두 삭제
+const deleteAllLikesList = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId: number = parseInt(req.params.userId)
+        const info: any = await userInfoController.userFindOne(userId)
+        // likeItemIds배열 저장
+        const likes = info.likeItemIds
+        // item 테이블에 각 itemId들에 likes를 -1하기
+        for (let itemId = 0; itemId < likes.length; itemId++) {
+            await itemController.itemHeartFindUpdate(likes[itemId], { likes: -1 })
+        }
+        // user 테이블에 likeItemIds를 빈 배열로 update
+        await userInfoController.userFindUpdate(userId, { likeItemIds: [] })
+        res.status(200).json({
+            result: "찜한 내역 모두 삭제 완료"
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+
+export default {
+    getMyPaymentHistory,
+    getDetailOfMyPaymentHistory,
+    findPaymentHistory,
+    checkStatus,
+    likesList,
+    deleteAllLikesList
+}
