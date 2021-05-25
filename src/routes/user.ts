@@ -44,7 +44,7 @@ module.exports = function (passport) {
       if (!canPassOnboarding(req)) {
         console.log("값이 하나도 없습니다")
         // 로그인 온보딩 페이지 필요
-        res.redirect('https://www.advist.kr')
+        res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
         console.log("뀨" + req.session["redirect_override"])
@@ -62,7 +62,7 @@ module.exports = function (passport) {
       if (!canPassOnboarding(req)) {
         console.log("값이 하나라도 없습니다")
         // 로그인 온보딩 페이지 필요
-        res.redirect('https://www.advist.kr')
+        res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
         res.redirect('https://www.advist.kr')
@@ -79,7 +79,7 @@ module.exports = function (passport) {
       if (!canPassOnboarding(req)) {
         console.log("값이 하나라도 없습니다")
         // 로그인 온보딩 페이지 필요
-        res.redirect('https://www.advist.kr')
+        res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
         res.redirect('https://www.advist.kr')
