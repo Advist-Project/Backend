@@ -123,4 +123,49 @@ const exhibitions = async (req: Request, res: Response, next: NextFunction) => {
         })
     }
 }
-export default { referenceOfExhibition, bestExhibition, exhibitions }
+
+// 어드민용
+const adminExhibitions = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const now = moment.nowDateTime()
+        const exhibition = await Exhibition.find(
+            {
+                dateStart: { $lte: now },
+                dateEnd: { $gte: now }
+            }
+        )
+            .where("visible").equals(true)
+            .where("rank").ne(1)
+            .sort({ "rank": 1 })
+        // iteminfo 붙이는 로직
+        for (let i = 0; i < exhibition.length; i++) {
+            const itemIdArray = exhibition[i]?.itemId
+            const Items: any = await referenceOfExhibition(itemIdArray)
+            if (Items === -1) {
+                res.status(501).json({
+                    error: "itemId에 오류가 있습니다."
+                })
+            } else if (Items === 0) {
+                res.status(502).json({
+                    error: "itemId와 itemInfo매칭에 오류가 생김"
+                })
+            } else {
+                exhibition[i].itemInfo = Items
+            }
+        }
+        res.status(200).json({
+            exhibition: exhibition
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+export default {
+    referenceOfExhibition,
+    bestExhibition,
+    exhibitions,
+    adminExhibitions
+}
