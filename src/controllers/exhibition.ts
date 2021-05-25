@@ -135,7 +135,6 @@ const adminExhibitions = async (req: Request, res: Response, next: NextFunction)
             }
         )
             .where("visible").equals(true)
-            .where("rank").ne(1)
             .sort({ "rank": 1 })
         // iteminfo 붙이는 로직
         for (let i = 0; i < exhibition.length; i++) {
