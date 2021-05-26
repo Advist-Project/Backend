@@ -2,14 +2,18 @@ import express from "express"
 var router = express.Router()
 module.exports = function (passport) {
 
-  router.get('/login', (req: any, res, next) => {
-    console.log("되긴 함? " + req.get('Referrer'))
-    if (req.get('Referrer')) {
-      req.session["redirect_override"] = req.get('Referrer')
-      console.log('Referrer set to:', req.get('Referrer'))
+  router.get('/login', (req, res, next) => {
+
+    const backUrl = req.query.backUrl
+    console.log("되긴 함? " + backUrl)
+
+    if (backUrl) {
+      req.session["redirect"] = backUrl
+      console.log('이전 페이지 :', backUrl)
     }
+
     res.status(200).json({
-      result: "경로 저장 성공"
+      result: "경로 저장 성공 : " + backUrl
     })
   })
 
@@ -47,10 +51,10 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
-        console.log("뀨" + req.session["redirect_override"])
-        res.redirect(req.session["redirect_override"] || "https://www.advist.kr")
-        req.session["redirect_override"] = ""
-        console.log("뀨2" + req.session.id)
+        console.log("뀨1" + req.session["redirect"])
+        res.redirect(req.session["redirect"] || "https://www.advist.kr")
+        req.session["redirect"] = ""
+        console.log("뀨2 " + req.session["redirect"])
       }
 
     })
