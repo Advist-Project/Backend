@@ -4,7 +4,7 @@ module.exports = function (passport) {
 
   router.get('/login', (req, res, next) => {
 
-    const backUrl = req.query.backUrl
+    const backUrl: string = req.body
     console.log("되긴 함? " + backUrl)
 
     if (backUrl) {
