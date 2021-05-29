@@ -2,7 +2,7 @@ import express from "express"
 var router = express.Router()
 module.exports = function (passport) {
 
-  router.get('/login', (req, res, next) => {
+  router.post('/login', (req, res, next) => {
 
     const backUrl: string = req.body
     console.log("되긴 함? " + backUrl)
