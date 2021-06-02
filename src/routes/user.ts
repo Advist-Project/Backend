@@ -2,9 +2,10 @@ import express from "express"
 var router = express.Router()
 module.exports = function (passport) {
 
-  router.post('/login', (req, res, next) => {
+  router.get('/login', (req, res, next) => {
 
-    const backUrl: string = req.body
+    // const backUrl: string = req.body
+    const backUrl = req.get('Referrer')
     console.log("되긴 함? " + backUrl)
 
     if (backUrl) {
