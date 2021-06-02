@@ -2,21 +2,25 @@ import express from "express"
 var router = express.Router()
 module.exports = function (passport) {
 
-  router.get('/login', (req, res, next) => {
+  router.get('/login',
+    (req: any, res, next) => {
+      console.log("되긴 함? 1번 " + req.get('Referrer'))
+      next()
+    }, (req, res, next) => {
 
-    // const backUrl: string = req.body
-    const backUrl = req.get('Referrer')
-    console.log("되긴 함? " + backUrl)
+      // const backUrl: string = req.body
+      const backUrl = req.get('Referrer')
+      console.log("되긴 함? " + backUrl)
 
-    if (backUrl) {
-      req.session["redirect"] = backUrl
-      console.log('이전 페이지 :', backUrl)
-    }
+      if (backUrl) {
+        req.session["redirect"] = backUrl
+        console.log('이전 페이지 :', backUrl)
+      }
 
-    res.status(200).json({
-      result: "경로 저장 성공 : " + backUrl
+      res.status(200).json({
+        result: "경로 저장 성공 : " + backUrl
+      })
     })
-  })
 
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
