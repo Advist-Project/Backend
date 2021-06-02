@@ -20,12 +20,12 @@ module.exports = function (passport) {
 
   // 온보딩이 이미 완료 되었을 때 이전 페이지 저장
   router.post('/login', (req, res, next) => {
-    const backUrl: string = req.body
+    const { backUrl } = req.body
     console.log("되긴 함? " + backUrl)
 
     if (backUrl) {
       req.session["redirect"] = backUrl
-      console.log('이전 페이지 :', backUrl)
+      console.log('이전 페이지 :' + backUrl)
     }
     res.status(200).json({
       result: "경로 저장 성공"
