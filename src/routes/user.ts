@@ -1,27 +1,8 @@
 import express from "express"
+import userInfoController from "../controllers/userInfo"
 var router = express.Router()
+
 module.exports = function (passport) {
-
-  router.get('/login',
-    (req: any, res, next) => {
-      console.log("되긴 함? 1번 " + req.get('Referrer'))
-      next()
-    }, (req, res, next) => {
-
-      // const backUrl: string = req.body
-      const backUrl = req.get('Referrer')
-      console.log("되긴 함? " + backUrl)
-
-      if (backUrl) {
-        req.session["redirect"] = backUrl
-        console.log('이전 페이지 :', backUrl)
-      }
-
-      res.status(200).json({
-        result: "경로 저장 성공 : " + backUrl
-      })
-    })
-
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
     // json문자열로 변환
@@ -37,15 +18,30 @@ module.exports = function (passport) {
       return true
   }
 
+  // 온보딩이 이미 완료 되었을 때 이전 페이지 저장
+  router.post('/login', (req, res, next) => {
+    const backUrl: string = req.body
+    console.log("되긴 함? " + backUrl)
+
+    if (backUrl) {
+      req.session["redirect"] = backUrl
+      console.log('이전 페이지 :', backUrl)
+    }
+    res.status(200).json({
+      result: "경로 저장 성공"
+    })
+  })
+
+  // 온보딩 해야 할때 이전 페이지로 돌아가기 및 온보딩 정보 저장
+  router.post("/onboarding", userInfoController.postLoginOnboarding, (req, res) => {
+    console.log("로그인 온보딩 값을 저장 했습니다")
+    console.log("뀨온1" + req.session["redirect"])
+    res.redirect(req.session["redirect"] || "https://www.advist.kr")
+    req.session["redirect"] = ""
+    console.log("뀨온2 " + req.session["redirect"])
+  })
+
   router.get('/auth/google',
-    // (req: any, res, next) => {
-    // console.log("되긴 함? " + req.get('Referrer'))
-    // if (req.get('Referrer').includes('google.com') === false) {
-    //   req.session["redirect_override"] = req.get('Referrer')
-    //   console.log('Referrer set to:', req.get('Referrer'))
-    // }
-    // next()
-    // },
     passport.authenticate('google', { scope: ['email', 'profile'] }))
   router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login', session: true }),
@@ -99,6 +95,7 @@ module.exports = function (passport) {
   router.get("/getuser", (req, res) => {
     res.send(req.user)
   })
+
   router.get("/auth/logout", (req, res) => {
     req.logout()
     req.session.destroy(() => {
