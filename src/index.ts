@@ -87,7 +87,7 @@ app.get(
   }
 )
 app.use("/user", userRoutes)
-app.use("/userinfo", userInfoRoutes)
+// app.use("/userinfo", userInfoRoutes)
 app.use("/pay", payRoutes)
 app.use("/item", itemRoutes)
 app.use("/exhibition", exhibitionRoutes)
