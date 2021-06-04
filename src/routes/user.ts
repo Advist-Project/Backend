@@ -100,6 +100,7 @@ module.exports = function (passport) {
 
   router.get("/auth/logout", (req, res) => {
     req.logout()
+    console.log("sessionId" + req.session.id)
     req.session.destroy(() => {
       res.clearCookie('connect.sid')
       res.send('done')
