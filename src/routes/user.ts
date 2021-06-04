@@ -25,7 +25,7 @@ module.exports = function (passport) {
 
     if (backUrl) {
       req.session["redirect"] = backUrl
-      console.log('이전 페이지 :' + backUrl)
+      console.log('이전 페이지 :' + req.session["redirect"])
     }
     res.status(200).json({
       result: "경로 저장 성공"
