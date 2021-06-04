@@ -22,18 +22,12 @@ module.exports = function (passport, app) {
   router.post('/login', (req, res, next) => {
     const { backUrl } = req.body
     console.log("되긴 함? " + backUrl)
-    try {
-      app.use(backUrl.session())
-    } catch (error) {
-      console.log(error.message)
+
+    if (backUrl) {
+      req.session["redirect"] = backUrl
+      console.log('이전 페이지 :' + req.session["redirect"])
+      console.log("sessionId" + req.session.id)
     }
-    console.log("sessionId" + req.session.id)
-    console.log('이전 페이지 :' + req.session["redirect"])
-    // if (backUrl) {
-    //   req.session["redirect"] = backUrl
-    //   console.log('이전 페이지 :' + req.session["redirect"])
-    //   console.log("sessionId" + req.session.id)
-    // }
     res.status(200).json({
       result: "경로 저장 성공"
     })
@@ -101,6 +95,7 @@ module.exports = function (passport, app) {
     })
 
   router.get("/getuser", (req, res) => {
+    console.log("sessionId" + req.session.id)
     res.send(req.user)
   })
 
