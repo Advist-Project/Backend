@@ -66,8 +66,8 @@ app.use((req: any, res: any, next: any) => {
 app.use(
   session({
     secret: "secretcode",
-    resave: true,
-    saveUninitialized: true,
+    resave: true, //
+    saveUninitialized: true, //빈값도 저장하는 지?
     store: mongoDBStore, //세션을 데이터베이스에 저장
     cookie: {
       sameSite: "none",
@@ -78,7 +78,7 @@ app.use(
 
 //app을 인자로 보내서 passport를 return 값으로 받음
 var passport = require('./controllers/user')(app) // 받은 passport를 passort라는 변수에 저장
-var userRoutes = require('./routes/user')(passport) //import가 아닌 require 함수로 가져옴
+var userRoutes = require('./routes/user')(passport, app) //import가 아닌 require 함수로 가져옴
 
 app.get(
   "/",

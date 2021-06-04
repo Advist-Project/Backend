@@ -2,7 +2,7 @@ import express from "express"
 import userInfoController from "../controllers/userInfo"
 var router = express.Router()
 
-module.exports = function (passport) {
+module.exports = function (passport, app) {
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
     // json문자열로 변환
@@ -22,12 +22,18 @@ module.exports = function (passport) {
   router.post('/login', (req, res, next) => {
     const { backUrl } = req.body
     console.log("되긴 함? " + backUrl)
-
-    if (backUrl) {
-      req.session["redirect"] = backUrl
-      console.log('이전 페이지 :' + req.session["redirect"])
-      console.log("sessionId" + req.session.id)
+    try {
+      app.use(backUrl.session())
+    } catch (error) {
+      console.log(error.message)
     }
+    console.log("sessionId" + req.session.id)
+    console.log('이전 페이지 :' + req.session["redirect"])
+    // if (backUrl) {
+    //   req.session["redirect"] = backUrl
+    //   console.log('이전 페이지 :' + req.session["redirect"])
+    //   console.log("sessionId" + req.session.id)
+    // }
     res.status(200).json({
       result: "경로 저장 성공"
     })
