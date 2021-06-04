@@ -26,6 +26,7 @@ module.exports = function (passport) {
     if (backUrl) {
       req.session["redirect"] = backUrl
       console.log('이전 페이지 :' + req.session["redirect"])
+      console.log("sessionId" + req.session.id)
     }
     res.status(200).json({
       result: "경로 저장 성공"
@@ -53,7 +54,7 @@ module.exports = function (passport) {
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
         console.log("뀨1" + req.session["redirect"])
-        console.log("session" + req.session)
+        console.log("sessionId" + req.session.id)
         res.redirect(req.session["redirect"] || "https://www.advist.kr")
         req.session["redirect"] = ""
         console.log("뀨2 " + req.session["redirect"])
