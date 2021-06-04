@@ -66,8 +66,12 @@ app.use((req: any, res: any, next: any) => {
 app.use(
   session({
     secret: "secretcode",
-    resave: true, //
-    saveUninitialized: true, //빈값도 저장하는 지?
+    // 모든 request마다 기존에 있던 session에 아무런 변경사항이 없을 시에도 그 session을 다시 저장하는 옵션
+    // (매 request 마다 세션을 계속 다시 저장하는 것)
+    resave: false,
+    // request가 들어오면 해당 request에서 새로 생성된 session에 아무런 작업이 이루어지지 않은 상황 
+    // false -> 아무런 작업이 이루워지지 않은 경우 저장 X
+    saveUninitialized: false,
     store: mongoDBStore, //세션을 데이터베이스에 저장
     cookie: {
       sameSite: "none",
