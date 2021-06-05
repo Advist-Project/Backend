@@ -9,10 +9,6 @@ const KakaoStrategy = require('passport-kakao').Strategy
 
 module.exports = function (app) {
 
-  //passport 실행
-  app.use(passport.initialize())
-  app.use(passport.session())
-
   //strategy에서 받은 정보들을 user에 입력 
   passport.serializeUser((user: IMongoDBUser, done: any) => {
     // console.log('serializeUser', user)

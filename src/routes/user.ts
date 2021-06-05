@@ -2,7 +2,7 @@ import express from "express"
 import userInfoController from "../controllers/userInfo"
 var router = express.Router()
 
-module.exports = function (passport, app) {
+module.exports = function (passport) {
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
     // json문자열로 변환
@@ -38,7 +38,7 @@ module.exports = function (passport, app) {
     console.log("로그인 온보딩 값을 저장 했습니다")
     console.log("뀨온1" + req.session["redirect"])
     res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+    res.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization")
     res.redirect(req.session["redirect"] || "https://www.advist.kr")
     req.session["redirect"] = ""
     console.log("뀨온2 " + req.session["redirect"])

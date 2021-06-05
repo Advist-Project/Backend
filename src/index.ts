@@ -10,11 +10,13 @@ import adminRoutes from "./routes/admin"
 import userInfoRoutes from "./routes/userInfo"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
+import cookieParser from "cookie-parser"
 
 // cors 등록
 
 const app = express()
 app.use(express.json())
+app.use(cookieParser())
 
 app.set("trust proxy", 1)
 mongoose
@@ -83,9 +85,14 @@ app.use(
     }
   }))
 
+//passport 실행
+app.use(passport.initialize())
+app.use(passport.session())
+
+
 //app을 인자로 보내서 passport를 return 값으로 받음
 var passport = require('./controllers/user')(app) // 받은 passport를 passort라는 변수에 저장
-var userRoutes = require('./routes/user')(passport, app) //import가 아닌 require 함수로 가져옴
+var userRoutes = require('./routes/user')(passport) //import가 아닌 require 함수로 가져옴
 
 app.get(
   "/",
