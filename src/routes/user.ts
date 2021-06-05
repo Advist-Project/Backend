@@ -37,6 +37,8 @@ module.exports = function (passport, app) {
   router.post("/onboarding", userInfoController.postLoginOnboarding, (req, res) => {
     console.log("로그인 온보딩 값을 저장 했습니다")
     console.log("뀨온1" + req.session["redirect"])
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
     res.redirect(req.session["redirect"] || "https://www.advist.kr")
     req.session["redirect"] = ""
     console.log("뀨온2 " + req.session["redirect"])
