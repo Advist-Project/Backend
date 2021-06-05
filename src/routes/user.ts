@@ -28,9 +28,11 @@ module.exports = function (passport) {
       console.log('이전 페이지 :' + req.session["redirect"])
       console.log("sessionId" + req.session.id)
     }
-    res.status(200).json({
-      result: "경로 저장 성공"
-    })
+    req.session.save(() =>
+      res.status(200).json({
+        result: "경로 저장 성공"
+      })
+    )
   })
 
   // 온보딩 해야 할때 이전 페이지로 돌아가기 및 온보딩 정보 저장
