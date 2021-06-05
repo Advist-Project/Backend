@@ -1,4 +1,5 @@
 import express from "express"
+import { Cookie } from "express-session"
 import userInfoController from "../controllers/userInfo"
 var router = express.Router()
 
@@ -24,15 +25,17 @@ module.exports = function (passport) {
     console.log("되긴 함? " + backUrl)
 
     if (backUrl) {
-      req.session["redirect"] = backUrl
-      console.log('이전 페이지 :' + req.session["redirect"])
-      console.log("sessionId" + req.session.id)
-    }
-    req.session.save(() =>
+      // req.session["redirect"] = backUrl
+      // console.log('이전 페이지 :' + req.session["redirect"])
+      // console.log("sessionId" + req.session.id)
+      res.cookie('backUrl', backUrl);
       res.status(200).json({
         result: "경로 저장 성공"
       })
-    )
+    }
+    // req.session.save(() =>
+    //   
+    // )
   })
 
   // 온보딩 해야 할때 이전 페이지로 돌아가기 및 온보딩 정보 저장
@@ -57,11 +60,15 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
-        console.log("뀨1" + req.session["redirect"])
-        console.log("sessionId" + req.session.id)
-        res.redirect(req.session["redirect"] || "https://www.advist.kr")
-        req.session["redirect"] = ""
-        console.log("뀨2 " + req.session["redirect"])
+        // console.log("뀨1" + req.session["redirect"])
+        // console.log("sessionId" + req.session.id)
+        // res.redirect(req.session["redirect"] || "https://www.advist.kr")
+        // req.session["redirect"] = ""
+        // console.log("뀨2 " + req.session["redirect"])
+        console.log("뀨1" + req.cookies.backUrl)
+        res.redirect(req.cookies.backUrl || "https://www.advist.kr")
+        res.cookie('backUrl', '')
+        console.log("뀨2" + req.cookies.backUrl)
       }
 
     })
