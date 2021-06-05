@@ -67,8 +67,6 @@ module.exports = function (passport) {
         // console.log("뀨2 " + req.session["redirect"])
         console.log("뀨1" + req.cookies.backUrl)
         res.redirect(req.cookies.backUrl || "https://www.advist.kr")
-        res.cookie('backUrl', '')
-        console.log("뀨2" + req.cookies.backUrl)
       }
 
     })
