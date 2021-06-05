@@ -11,6 +11,7 @@ import userInfoRoutes from "./routes/userInfo"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
 import cookieParser from "cookie-parser"
+import passportModule from 'passport'
 
 // cors 등록
 
@@ -86,8 +87,8 @@ app.use(
   }))
 
 //passport 실행
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passportModule.initialize())
+app.use(passportModule.session())
 
 
 //app을 인자로 보내서 passport를 return 값으로 받음
