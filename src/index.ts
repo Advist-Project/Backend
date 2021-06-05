@@ -76,6 +76,9 @@ app.use(
     cookie: {
       sameSite: "none",
       secure: true,
+      // 모든 범위에서 이 쿠키 사용 가능 "/"
+      // default일 경우 쿠키가 생성된 해당 페이지에서만 가능
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
     }
   }))
