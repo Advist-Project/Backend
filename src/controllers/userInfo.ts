@@ -35,10 +35,9 @@ const postLoginOnboarding = async (req: Request, res: Response, next: NextFuncti
             career: career
         }
         await userFindUpdate(userId, params)
-        // res.status(200).json({
-        //     result: "온보딩 update 성공"
-        // })
-        next()
+        res.status(200).json({
+            result: "온보딩 update 성공"
+        })
     }
     catch (error) {
         res.status(500).json({

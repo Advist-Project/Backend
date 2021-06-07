@@ -39,15 +39,7 @@ module.exports = function (passport) {
   })
 
   // 온보딩 해야 할때 이전 페이지로 돌아가기 및 온보딩 정보 저장
-  router.post("/onboarding", userInfoController.postLoginOnboarding, (req, res) => {
-    console.log("로그인 온보딩 값을 저장 했습니다")
-    console.log("뀨온1" + req.session["redirect"])
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization")
-    res.redirect(req.session["redirect"] || "https://www.advist.kr")
-    req.session["redirect"] = ""
-    console.log("뀨온2 " + req.session["redirect"])
-  })
+  router.post("/onboarding", userInfoController.postLoginOnboarding)
 
   router.get('/auth/google',
     passport.authenticate('google', { scope: ['email', 'profile'] }))
@@ -59,13 +51,6 @@ module.exports = function (passport) {
         // 로그인 온보딩 페이지 필요
         res.redirect('https://www.advist.kr/onboarding')
       } else {
-        console.log("로그인 온보딩 값이 다 있습니다")
-        // console.log("뀨1" + req.session["redirect"])
-        // console.log("sessionId" + req.session.id)
-        // res.redirect(req.session["redirect"] || "https://www.advist.kr")
-        // req.session["redirect"] = ""
-        // console.log("뀨2 " + req.session["redirect"])
-        console.log("뀨1" + req.cookies.backUrl)
         res.redirect(req.cookies.backUrl || "https://www.advist.kr")
       }
 
