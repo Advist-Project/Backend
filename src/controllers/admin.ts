@@ -4,7 +4,8 @@ import orderReceipt from "../models/orderReceipt"
 import bootPay from "./bootPay"
 import mypageController from "./myPage"
 import orderReceiptController from "./orderReceipt"
-
+import getNextSequence from "./counter"
+import Exhibition from "../models/exhibition"
 const findAdminPaymentHistory = async () => {
     try {
         const paymentHistroy = await orderReceipt.find()
@@ -137,4 +138,53 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
         })
     }
 }
-export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund }
+
+
+//어드민 newExhibition post용
+const newExhibitionSave = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const exhibitionId = await getNextSequence("exhibition")
+        const newExhibition = new Exhibition({
+            exhibitionId,
+            title: req.body.title,
+            dateStart: req.body.dateStart,
+            dateEnd: req.body.dateEnd,
+            visible: req.body.visible,
+            rank: req.body.rank,
+            itemId: req.body.itemId
+        })
+        await newExhibition.save()
+        res.status(200).json({
+            new_Exhibition: newExhibition,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//어드민 updateExhibition post용
+const updateExhibition = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const params = {
+            title: req.body.title,
+            dateStart: req.body.dateStart,
+            dateEnd: req.body.dateEnd,
+            visible: req.body.visible,
+            rank: req.body.rank,
+            itemId: req.body.itemId
+        }
+        await Exhibition.findOneAndUpdate({ exhibitionId: req.body.exhibitionId }, { $set: params }, { new: true })
+        res.status(200).json({
+            updatedExhibition: "업데이트 완료",
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+
+export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition }

@@ -10,14 +10,12 @@ import adminRoutes from "./routes/admin"
 import userInfoRoutes from "./routes/userInfo"
 import session from 'express-session'
 import ConnectMongoDBSession from "connect-mongodb-session"
-import cookieParser from "cookie-parser"
 import passportModule from 'passport'
 
 // cors 등록
 
 const app = express()
 app.use(express.json())
-app.use(cookieParser())
 
 app.set("trust proxy", 1)
 mongoose
@@ -54,6 +52,7 @@ app.use((req: any, res: any, next: any) => {
     'https://advist.kr',
     'https://www.advist.kr',
     'https://advist-admin.vercel.app',
+    'https://localhost:8081',
     'http://localhost:8081'
   ]
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
