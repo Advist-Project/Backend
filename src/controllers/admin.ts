@@ -4,7 +4,6 @@ import orderReceipt from "../models/orderReceipt"
 import bootPay from "./bootPay"
 import mypageController from "./myPage"
 import orderReceiptController from "./orderReceipt"
-import exhibition from "./exhibition"
 import getNextSequence from "./counter"
 import Exhibition from "../models/exhibition"
 const findAdminPaymentHistory = async () => {
@@ -154,15 +153,15 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
 const newExhibitionSave = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const exhibitionId = await getNextSequence("exhibition")
+        console.log(req.body.title)
         const newExhibition = new Exhibition({
-            exhibitionId: exhibitionId,
+            exhibitionId,
             title: req.body.title,
             dateStart: req.body.dateStart,
             dateEnd: req.body.dateEnd,
             visible: req.body.visible,
             rank: req.body.rank,
-            itemId: req.body.itemId,
-            itemInfo: req.body.itemInfo
+            itemId: req.body.itemId
         })
         await newExhibition.save()
         res.status(200).json({
@@ -178,10 +177,18 @@ const newExhibitionSave = async (req: Request, res: Response, next: NextFunction
 //어드민 updateExhibition post용
 const updateExhibition = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
-        await Exhibition.findOneAndUpdate({ id: req.body.exhibitionId }, { $set: req.body }, { new: true })
+        console.log(req.body)
+        const params = {
+            title: req.body.title,
+            dateStart: req.body.dateStart,
+            dateEnd: req.body.dateEnd,
+            visible: req.body.visible,
+            rank: req.body.rank,
+            itemId: req.body.itemId
+        }
+        const values = await Exhibition.findOneAndUpdate({ exhibitionId: req.body.exhibitionId }, { $set: params }, { new: true })
         res.status(200).json({
-            updatedExhibition: Exhibition,
+            updatedExhibition: values,
         })
     } catch (error) {
         res.status(500).json({
