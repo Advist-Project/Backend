@@ -140,20 +140,10 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 
-
-//기획전 있는지 없는지 확인해야함
-//시퀀스 아이디 있는거는 안올라가도록 (find + where 문으로 seq 값 가져오기)
-//수정하는 api 하나 새로 추가하는 api 하나 
-//새로 저장하는 기획전 > 데이터 받아서 > save > seq ++ (getNextSequence("exhibition"))
-//수정하는 기획전 > 데이터 받고 > 기존에있던 데이터들을 받아서 덮어쓰기 > findOneAndUpdate
-//아이템 받는거는 우선순위 대로 받아야함    
-
-
 //어드민 newExhibition post용
 const newExhibitionSave = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const exhibitionId = await getNextSequence("exhibition")
-        console.log(req.body.title)
         const newExhibition = new Exhibition({
             exhibitionId,
             title: req.body.title,
@@ -177,7 +167,6 @@ const newExhibitionSave = async (req: Request, res: Response, next: NextFunction
 //어드민 updateExhibition post용
 const updateExhibition = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.body)
         const params = {
             title: req.body.title,
             dateStart: req.body.dateStart,
@@ -186,9 +175,9 @@ const updateExhibition = async (req: Request, res: Response, next: NextFunction)
             rank: req.body.rank,
             itemId: req.body.itemId
         }
-        const values = await Exhibition.findOneAndUpdate({ exhibitionId: req.body.exhibitionId }, { $set: params }, { new: true })
+        await Exhibition.findOneAndUpdate({ exhibitionId: req.body.exhibitionId }, { $set: params }, { new: true })
         res.status(200).json({
-            updatedExhibition: values,
+            updatedExhibition: "업데이트 완료",
         })
     } catch (error) {
         res.status(500).json({
