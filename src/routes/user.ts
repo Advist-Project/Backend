@@ -19,24 +19,18 @@ module.exports = function (passport) {
       return true
   }
 
-  // 온보딩이 이미 완료 되었을 때 이전 페이지 저장
-  router.post('/login', (req, res, next) => {
-    const { backUrl } = req.body
-    console.log("되긴 함? " + backUrl)
+  // // 온보딩이 이미 완료 되었을 때 이전 페이지 저장
+  // router.post('/login', (req, res, next) => {
+  //   const { backUrl } = req.body
+  //   console.log("되긴 함? " + backUrl)
 
-    if (backUrl) {
-      // req.session["redirect"] = backUrl
-      // console.log('이전 페이지 :' + req.session["redirect"])
-      // console.log("sessionId" + req.session.id)
-      res.cookie('backUrl', backUrl);
-      res.status(200).json({
-        result: "경로 저장 성공"
-      })
-    }
-    // req.session.save(() =>
-    //   
-    // )
-  })
+  //   if (backUrl) {
+  //     res.cookie('backUrl', backUrl);
+  //     res.status(200).json({
+  //       result: "경로 저장 성공"
+  //     })
+  //   }
+  // })
 
   // 온보딩 해야 할때 이전 페이지로 돌아가기 및 온보딩 정보 저장
   router.post("/onboarding", userInfoController.postLoginOnboarding)
@@ -51,7 +45,7 @@ module.exports = function (passport) {
         // 로그인 온보딩 페이지 필요
         res.redirect('https://www.advist.kr/onboarding')
       } else {
-        res.redirect(req.cookies.backUrl || "https://www.advist.kr")
+        res.redirect("https://www.advist.kr/oauth")
       }
 
     })
@@ -66,7 +60,7 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
-        res.redirect('https://www.advist.kr')
+        res.redirect("https://www.advist.kr/oauth")
       }
 
     })
@@ -83,19 +77,17 @@ module.exports = function (passport) {
         res.redirect('https://www.advist.kr/onboarding')
       } else {
         console.log("로그인 온보딩 값이 다 있습니다")
-        res.redirect('https://www.advist.kr')
+        res.redirect("https://www.advist.kr/oauth")
       }
 
     })
 
   router.get("/getuser", (req, res) => {
-    console.log("sessionId" + req.session.id)
     res.send(req.user)
   })
 
   router.get("/auth/logout", (req, res) => {
     req.logout()
-    console.log("sessionId" + req.session.id)
     req.session.destroy(() => {
       res.clearCookie('connect.sid')
       res.send('done')
