@@ -54,7 +54,7 @@ app.use((req: any, res: any, next: any) => {
     'https://advist.kr',
     'https://www.advist.kr',
     'https://advist-admin.vercel.app',
-    'https://localhost:8081'
+    'https://localhost:8081',
     'http://localhost:8081'
   ]
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
