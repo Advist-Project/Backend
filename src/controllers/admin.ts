@@ -155,7 +155,7 @@ const newExhibitionSave = async (req: Request, res: Response, next: NextFunction
     try {
         const exhibitionId = await getNextSequence("exhibition")
         const newExhibition = new Exhibition({
-            exhibitionId,
+            exhibitionId: exhibitionId,
             title: req.body.title,
             dateStart: req.body.dateStart,
             dateEnd: req.body.dateEnd,
