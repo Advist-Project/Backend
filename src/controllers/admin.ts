@@ -4,7 +4,9 @@ import orderReceipt from "../models/orderReceipt"
 import bootPay from "./bootPay"
 import mypageController from "./myPage"
 import orderReceiptController from "./orderReceipt"
-
+import exhibition from "./exhibition"
+import getNextSequence from "./counter"
+import Exhibition from "../models/exhibition"
 const findAdminPaymentHistory = async () => {
     try {
         const paymentHistroy = await orderReceipt.find()
@@ -137,4 +139,56 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
         })
     }
 }
-export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund }
+
+
+
+//기획전 있는지 없는지 확인해야함
+//시퀀스 아이디 있는거는 안올라가도록 (find + where 문으로 seq 값 가져오기)
+//수정하는 api 하나 새로 추가하는 api 하나 
+//새로 저장하는 기획전 > 데이터 받아서 > save > seq ++ (getNextSequence("exhibition"))
+//수정하는 기획전 > 데이터 받고 > 기존에있던 데이터들을 받아서 덮어쓰기 > findOneAndUpdate
+//아이템 받는거는 우선순위 대로 받아야함    
+
+
+//어드민 newExhibition post용
+const newExhibitionSave = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const exhibitionId = await getNextSequence("exhibition")
+        const newExhibition = new Exhibition({
+            exhibitionId,
+            title: req.body.title,
+            dateStart: req.body.dateStart,
+            dateEnd: req.body.dateEnd,
+            visible: req.body.visible,
+            rank: req.body.rank,
+            itemId: req.body.itemId,
+            itemInfo: req.body.itemInfo
+        })
+        await newExhibition.save()
+        res.status(200).json({
+            new_Exhibition: newExhibition,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//어드민 updateExhibition post용
+const updateExhibition = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        await Exhibition.findOneAndUpdate({ id: req.body.exhibitionId }, { $set: req.body }, { new: true })
+        res.status(200).json({
+            updatedExhibition: Exhibition,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+
+export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition }

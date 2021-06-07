@@ -5,6 +5,7 @@ import Item from "../models/item"
 import moment from "./moment"
 import itemController from "./item"
 
+
 const referenceOfExhibition = async (itemIds?: Array<number>) => {
     try {
         if (itemIds == undefined) return -1
@@ -162,9 +163,14 @@ const adminExhibitions = async (req: Request, res: Response, next: NextFunction)
         })
     }
 }
+
+
+
+
+
 export default {
     referenceOfExhibition,
     bestExhibition,
     exhibitions,
-    adminExhibitions
+    adminExhibitions,
 }
