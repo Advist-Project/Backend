@@ -1,8 +1,8 @@
 import { Document } from 'mongoose'
 
 export default interface Item extends Document {
-    itemId?: number, //기본키값,상품ID,
-    title?: string, //상품 이름,
+    itemId: number, //기본키값,상품ID,
+    title: string, //상품 이름,
     owner?: string, //상품 제작자,
     label?: string, //라벨 이름(NEW, BEST, null),
     // 함수 필요
