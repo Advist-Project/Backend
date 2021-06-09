@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose"
 import Item from "../interfaces/item"
 
 const itemSchema: Schema = new Schema({
-    itemId: { type: Number, required: false },
+    itemId: { type: Number, required: true },
     title: { type: String, required: true },
     owner: { type: String, required: true },
     label: { type: String, required: true },

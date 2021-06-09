@@ -176,10 +176,27 @@ const cancelHeart = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+// 어드민에서 상품을 고를때 id와 제목만.
+const allItem = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const item = await Item.find().select('-_id itemId title')
+        res.status(200).json({
+            item: item
+        })
+
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
 export default {
     itemHeartFindUpdate,
     getItem,
     isOkOptions,
     chooseHeart,
-    cancelHeart
+    cancelHeart,
+    allItem
 }
