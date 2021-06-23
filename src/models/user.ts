@@ -1,4 +1,6 @@
 import mongoose from 'mongoose'
+import { IMongoDBUser } from '../interfaces/user'
+import moment from "../controllers/moment"
 
 const user = new mongoose.Schema({
     googleId: {
@@ -49,6 +51,10 @@ const user = new mongoose.Schema({
         required: false,
         type: String
     },
+    createdAt: {
+        required: false,
+        type: String
+    },
     orderIds: [{
         required: false,
         type: Number
@@ -58,6 +64,10 @@ const user = new mongoose.Schema({
         type: Number
     }] //찜한내역
 
+})
+user.pre('save', function (this: IMongoDBUser) {
+    this.createdAt = moment.nowDateTime()
+    console.log(this.createdAt)
 })
 
 export default mongoose.model("User", user)

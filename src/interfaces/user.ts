@@ -11,6 +11,7 @@ export interface IMongoDBUser {
     company?: string,
     jobDepartment?: string,
     career?: string,
+    createdAt?: string,
     __v?: number,
     _id?: string,
     orderIds?: [number], //구매내역
