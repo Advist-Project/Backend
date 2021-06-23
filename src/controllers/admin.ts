@@ -6,6 +6,23 @@ import mypageController from "./myPage"
 import orderReceiptController from "./orderReceipt"
 import getNextSequence from "./counter"
 import Exhibition from "../models/exhibition"
+import User from "../models/user"
+
+const getUserInfos = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await User.find().select('-_id userId googleId naverId kakaoId username email phone career company jobDepartment createdAt')
+        res.status(200).json({
+            result: user
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+// 구매내역 불러오기
 const findAdminPaymentHistory = async () => {
     try {
         const paymentHistroy = await orderReceipt.find()
@@ -187,4 +204,4 @@ const updateExhibition = async (req: Request, res: Response, next: NextFunction)
 }
 
 
-export default { getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition }
+export default { getUserInfos, getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition }
