@@ -192,11 +192,28 @@ const allItem = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+//어드민에서 상품 정보를 다 받아 올 때
+const allItemInfo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const itemInfo = await Item.find()
+        res.status(200).json({
+            itemInfo: itemInfo
+        })
+
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
 export default {
     itemHeartFindUpdate,
     getItem,
     isOkOptions,
     chooseHeart,
     cancelHeart,
-    allItem
+    allItem,
+    allItemInfo
 }
