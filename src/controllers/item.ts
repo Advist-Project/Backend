@@ -72,7 +72,7 @@ const getItem = async (req: Request, res: Response, next: NextFunction) => {
             "owner": item?.owner,
             "label": item?.label,
             "likes": item?.likes,
-            "coachInfo": {},
+            "coachInfo": item?.coachInfo,
             "coachImg": item?.coachImg,
             "commentImg": item?.commentImg,
             "img": item?.img,
