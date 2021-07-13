@@ -8,5 +8,5 @@ router.get("/heart/:userId", itemController.chooseHeart)
 router.get("/cancelheart/:userId", itemController.cancelHeart)
 router.get("/admin/allitem", itemController.allItem)
 router.get("/admin/alliteminfo", itemController.allItemInfo)
-
+router.get("/admin/:itemId", itemController.getItemAdmin)
 export = router
