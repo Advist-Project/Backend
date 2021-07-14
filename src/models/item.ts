@@ -9,6 +9,10 @@ const itemSchema: Schema = new Schema({
     // 함수 필요
     likes: { type: Number, required: true, default: 0 },
     coachImg: { type: String, required: false }, //코치 설명 이미지,
+    coachInfo: {
+        desc: { type: String, required: false },//코치 설명
+        career: { type: String, required: false }//코치 경력
+    },
     commentImg: { type: String, required: false }, //후기 이미지,
     // detail page에 있는 양식 or 예시의 image와 설명(title)
     template:

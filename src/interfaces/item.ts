@@ -9,6 +9,10 @@ export default interface Item extends Document {
     likes: number, //좋아요,
     coachImg?: string, //코치 설명 이미지,
     commentImg?: string, //후기 이미지,  
+    coachInfo?: {
+        desc?: string, //코치 설명
+        career?: string, //코치 경력
+    }, //코치 정보
     // detail page에 있는 양식 or 예시의 image와 설명(title)
     template:
     [{

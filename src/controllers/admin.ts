@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express"
-import _ from "lodash"
+import _, { template } from "lodash"
 import orderReceipt from "../models/orderReceipt"
 import bootPay from "./bootPay"
 import mypageController from "./myPage"
 import orderReceiptController from "./orderReceipt"
 import getNextSequence from "./counter"
 import Exhibition from "../models/exhibition"
+import Item from "../models/item"
 import User from "../models/user"
 
 const getUserInfos = async (req: Request, res: Response, next: NextFunction) => {
@@ -202,6 +203,65 @@ const updateExhibition = async (req: Request, res: Response, next: NextFunction)
         })
     }
 }
+//어드민 updateProductDetail post용
+const updateProductDetail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const params = {
+            coachImg: req.body.postData.coachImg,
+            coachInfo: req.body.postData.coachInfo,
+            commentImg: req.body.postData.commentImg,
+            deleteYN: req.body.postData.deleteYN,
+            img: req.body.postData.img,
+            itemId: req.body.postData.itemId,
+            label: req.body.postData.label,
+            likes: req.body.postData.likes,
+            options: req.body.postData.options,
+            owner: req.body.postData.owner,
+            tag: req.body.postData.tag,
+            template: req.body.postData.template,
+            title: req.body.postData.title
+        }
+        console.log(params)
+        await Item.findOneAndUpdate({ itemId: req.body.postData.itemId }, { $set: params }, { new: true })
+        res.status(200).json({
+            updateProductDetail: "업데이트 완료",
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
+//어드민 newProductDetail post용
+const newProductDetailSave = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        console.log(req.body.postData)
+        const itemId = await getNextSequence("item")
+        const newProductDetail = new Item({
+            itemId,
+            coachImg: req.body.postData.coachImg,
+            coachInfo: req.body.postData.coachInfo,
+            commentImg: req.body.postData.commentImg,
+            deleteYN: req.body.postData.deleteYN,
+            img: req.body.postData.img,
+            label: req.body.postData.label,
+            likes: req.body.postData.likes,
+            options: req.body.postData.options,
+            owner: req.body.postData.owner,
+            tag: req.body.postData.tag,
+            template: req.body.postData.template,
+            title: req.body.postData.title
+        })
+        await newProductDetail.save()
+        res.status(200).json({
+            new_Exhibition: newProductDetail,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
-export default { getUserInfos, getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition }
+export default { getUserInfos, getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition, updateProductDetail, newProductDetailSave }
