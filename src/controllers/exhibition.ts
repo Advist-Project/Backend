@@ -174,7 +174,7 @@ const referenceOfExhibitionAdmin = async (itemIds?: Array<number>) => {
                     // 안그러면 undefine으로 값이 채워짐.-> map이라서
                     return {}
                 } else {
-                    const realOptions = await itemController.isOkOptions(item?.options, itemId)
+                    const realOptions = await itemController.isOkOptionsAdmin(item?.options, itemId)
                     const itemInfo = {
                         "itemId": item?.itemId,
                         "title": item?.title,
