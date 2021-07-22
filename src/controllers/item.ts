@@ -308,5 +308,6 @@ export default {
     chooseHeart,
     cancelHeart,
     allItem,
-    allItemInfo
+    allItemInfo,
+    isOkOptionsAdmin
 }
