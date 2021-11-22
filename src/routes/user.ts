@@ -1,9 +1,9 @@
 import express from "express"
-import { Cookie } from "express-session"
 import userInfoController from "../controllers/userInfo"
+import passport from "passport"
 var router = express.Router()
 
-module.exports = function (passport) {
+export default function () {
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
     // json문자열로 변환
@@ -49,7 +49,7 @@ module.exports = function (passport) {
       }
 
     })
-  router.get('/auth/kakao', passport.authenticate('kakao'))
+  router.get('/auth/kakao', passport.authenticate('kakao', { scope: ['email', 'profile'] }))
 
   router.get('/auth/kakao/callback',
     passport.authenticate('kakao', { failureRedirect: '/user/login', session: true }),

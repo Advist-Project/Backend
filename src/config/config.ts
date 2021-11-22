@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import _ from 'lodash'
+import { mongoDBStore } from '../server/server'
 
 const envFound = dotenv.config()
 
@@ -60,6 +61,37 @@ const NAVER = {
     secret: naver_secret
 }
 
+const corsWhitelist = [
+    'https://frontend-git-develop-advi33.vercel.app',
+    'https://frontend-git-ympark-advi33.vercel.app',
+    'https://localhost:3000',
+    'http://localhost:3000',
+    'https://advist.vercel.app',
+    'https://advist.kr',
+    'https://www.advist.kr',
+    'https://advist-admin.vercel.app',
+    'https://localhost:8081',
+    'http://localhost:8081'
+]
+
+const sessionConfig = {
+    secret: "secretcode",
+    // 모든 request마다 기존에 있던 session에 아무런 변경사항이 없을 시에도 그 session을 다시 저장하는 옵션
+    // (매 request 마다 세션을 계속 다시 저장하는 것)
+    resave: false,
+    // request가 들어오면 해당 request에서 새로 생성된 session에 아무런 작업이 이루어지지 않은 상황 
+    // false -> 아무런 작업이 이루워지지 않은 경우 저장 X
+    saveUninitialized: false,
+    store: mongoDBStore, //세션을 데이터베이스에 저장
+    cookie: {
+        sameSite: "none",
+        secure: true,
+        // 모든 범위에서 이 쿠키 사용 가능 "/"
+        // default일 경우 쿠키가 생성된 해당 페이지에서만 가능
+        path: "/",
+        maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
+    }
+}
 config = {
     mongo: MONGO,
     server: SERVER,
@@ -67,6 +99,8 @@ config = {
     google: GOOGLE,
     kakao: KAKAO,
     naver: NAVER,
+    corsWhitelist: corsWhitelist,
+    sessionConfig: sessionConfig
 }
 
 export default config
