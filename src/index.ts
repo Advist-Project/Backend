@@ -36,8 +36,8 @@ app.use(session(config.sessionConfig))
 app.use(passportModule.initialize())
 app.use(passportModule.session())
 
-passportHandler(app)
-userRoutes //import가 아닌 require 함수로 가져옴
+
+userRoutes(passportHandler(passportModule)) //import가 아닌 require 함수로 가져옴
 
 app.get(
   "/",

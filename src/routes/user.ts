@@ -1,9 +1,9 @@
 import express from "express"
 import userInfoController from "../controllers/userInfo"
-import passport from "passport"
+
 var router = express.Router()
 
-export default function () {
+export default function (passport) {
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
   const canPassOnboarding = (req): boolean => {
     // json문자열로 변환

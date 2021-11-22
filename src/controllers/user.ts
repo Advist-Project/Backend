@@ -1,13 +1,12 @@
 import User from '../models/user'
 import { IMongoDBUser } from "../interfaces/user"
 import config from '../config/config'
-import passport from 'passport'
 import getNextSequence from './counter'
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const NaverStrategy = require('passport-naver').Strategy
 const KakaoStrategy = require('passport-kakao').Strategy
 
-export default function () {
+export default function (passport: { serializeUser: (arg0: (user: IMongoDBUser, done: any) => any) => void; deserializeUser: (arg0: (id: string, done: any) => void) => void; use: (arg0: any) => void }) {
 
   //strategy에서 받은 정보들을 user에 입력 
   passport.serializeUser((user: IMongoDBUser, done: any) => {
