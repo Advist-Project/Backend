@@ -1,6 +1,6 @@
 
-import { IMongoDBUser } from "src/interfaces/user"
-
+import { IMongoDBUser } from "../../interfaces/user"
+import session from "express-session"
 
 declare global {
     namespace Express {
@@ -12,7 +12,7 @@ declare global {
         interface Request {
             authInfo?: AuthInfo
             user?: User
-            session?: any
+            session?: session.Session & Partial<session.SessionData>;
 
             // These declarations are merged into express's Request type
             login(user: User, done: (err: any) => void): void
