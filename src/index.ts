@@ -1,5 +1,5 @@
 import express from "express"
-import { connectMongoose } from "./server/server"
+import { connectMongoose } from "./mongoDB/database"
 import payRoutes from "./routes/pay"
 import itemRoutes from "./routes/item"
 import exhibitionRoutes from "./routes/exhibition"
