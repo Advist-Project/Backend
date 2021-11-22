@@ -1,11 +1,14 @@
 import express from "express"
+import { RequestHandler, ParamsDictionary, Request } from "express-serve-static-core"
+import { ParsedQs } from "qs"
 import userInfoController from "../controllers/userInfo"
+
 
 var router = express.Router()
 
-export default function (passport) {
+export default function (passport: { authenticate: (arg0: string, arg1: { scope?: string[]; failureRedirect?: string; session?: boolean }) => RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>> }) {
   // 로그인 온보딩을 지나쳐도 되는지 안되는지
-  const canPassOnboarding = (req): boolean => {
+  const canPassOnboarding = (req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): boolean => {
     // json문자열로 변환
     const userJsonString = JSON.stringify(req.user)
     // json object로 변환
