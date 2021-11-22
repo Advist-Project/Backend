@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import _ from 'lodash'
-import { mongoDBStore } from '../server/server'
+import { mongoDBStore } from '../mongoDB/database'
 
 const envFound = dotenv.config()
 
