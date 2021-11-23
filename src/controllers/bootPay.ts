@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { RestClient } from "@bootpay/server-rest-client"
 import config from "../config/config"
-import orderReciptController from "./orderReceipt"
+import orderReciptService from "../service/orderReceipt"
 
 const payVerify = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,7 +14,7 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
     const orderId: any = req.query.orderId
     // orderId를 기준으로 item collection에 있는 discountPrice를 가져오기 -> await로 꺼내지 않으면
     // promise객체로 나옴..
-    const order: any = await orderReciptController.orderReciptFindOne(orderId)
+    const order: any = await orderReciptService.orderReciptFindOne(orderId)
     const realPrice: any = order.itemInfo.option.discountPrice
     // bootpay accesstoken
     const response = await RestClient.getAccessToken()
@@ -42,7 +42,7 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
             // -1 -> 1 결제 검증 완료
             status: 1
           }
-          await orderReciptController.orderReciptFindUpdate(orderId, params)
+          await orderReciptService.orderReciptFindUpdate(orderId, params)
           console.log("successful update receiptId")
           res.status(200).json({
             message: "success verify"
@@ -70,7 +70,7 @@ const payVerify = async (req: Request, res: Response, next: NextFunction) => {
                 revokedTime: cancelResponse.data.revoked_at
               }
             }
-            await orderReciptController.orderReciptFindUpdate(orderId, cancelParams)
+            await orderReciptService.orderReciptFindUpdate(orderId, cancelParams)
             console.log("success cancel")
             console.log("successful update status")
             res.status(201).json({
@@ -114,7 +114,7 @@ const payCancel = async (orderId: number, receiptId: string, price: number, name
           "paymentInfo.revokedTime": response.data.revoked_at,
           "paymentInfo.revokedReason": reason
         }
-        await orderReciptController.orderReciptFindUpdate(orderId, cancelParams)
+        await orderReciptService.orderReciptFindUpdate(orderId, cancelParams)
         console.log("success cancel" + response)
 
       }

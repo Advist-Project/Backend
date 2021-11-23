@@ -1,54 +1,16 @@
 import { NextFunction, Request, Response } from "express"
 import _ from "lodash"
-import orderReceipt from "../models/orderReceipt"
-import orderReceiptController from "./orderReceipt"
-import userInfoController from "./userInfo"
-import itemController from "./item"
-import exhibitionController from "./exhibition"
-
-// userId로 table찾기 
-// status = 1 또는 2 => 프론트에서 결제 완료 api호출 했으면 2만
-// status = 3 => 변심에 대한 환불 + 기타)
-// 날짜 순으로 내림차순
-const findPaymentHistory = async (userId: number) => {
-    try {
-        const paymentHistroy = await orderReceipt.find({ userId: userId })
-            .where("status").in([1, 2, 3, 4])
-            .sort({ "paymentInfo.purchasedTime": -1 })
-
-        // 구매 내역이 없는 경우
-        if (_.isEmpty(paymentHistroy)) return -1
-        else return paymentHistroy
-    }
-    catch (error) {
-        console.log(error.message)
-        return 0
-    }
-}
-const checkStatus = async (status: any) => {
-    try {
-
-        if (status === 3)
-            return "환불 완료"
-        else if (status === 4)
-            return "후기 작성 완료"
-        else if (status === 2 || status === 1)
-            return "결제 완료"
-        else if (status === 0)
-            return "검증 실패 후 취소완료"
-        else
-            return "결제프로세스 중단"
-    }
-    catch (error) {
-        return "status번호가 잘못됨"
-    }
-}
+import orderReceiptService from "../service/orderReceipt"
+import itemService from "../service/item"
+import exhibitionService from "../service/exhibition"
+import myPageService from "../service/myPage"
+import userInfoService from "../service/userInfo"
 
 // 구매내역
 const getMyPaymentHistory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId: number = parseInt(req.params.userId)
-        const payment = await findPaymentHistory(userId)
+        const payment = await myPageService.findPaymentHistory(userId)
 
         if (payment === 0) {
             res.status(501).json({
@@ -74,12 +36,12 @@ const getMyPaymentHistory = async (req: Request, res: Response, next: NextFuncti
                     "img": payment[i]["itemInfo"]["itemImg"],
                     "itemName": payment[i]["itemInfo"]["itemName"],
                     "price": payment[i]["itemInfo"]["option"]["discountPrice"],
-                    "status": await checkStatus(payment[i]["status"])
+                    "status": await myPageService.checkStatus(payment[i]["status"])
                 }
                 paymentHistroy[i] = history
             }
             // user테이블에 구매내역 update
-            await userInfoController.userFindUpdate(userId, { orderIds: orders })
+            await userInfoService.userFindUpdate(userId, { orderIds: orders })
 
             res.status(200).json({
                 result: paymentHistroy
@@ -97,7 +59,7 @@ const getMyPaymentHistory = async (req: Request, res: Response, next: NextFuncti
 const getDetailOfMyPaymentHistory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const orderId: number = parseInt(req.params.orderId)
-        const payment = await orderReceiptController.orderReciptFindOne(orderId)
+        const payment = await orderReceiptService.orderReciptFindOne(orderId)
         if (payment === null || payment === undefined) {
             res.status(501).json({
                 error: "해당 orderId가 없습니다."
@@ -130,7 +92,7 @@ const getDetailOfMyPaymentHistory = async (req: Request, res: Response, next: Ne
 const likesList = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId: number = parseInt(req.params.userId)
-        const info: any = await userInfoController.userFindOne(userId)
+        const info: any = await userInfoService.userFindOne(userId)
         // likeItemIds배열 저장
         const likes = info.likeItemIds
         // 찜한 내역이 없는 경우
@@ -140,7 +102,7 @@ const likesList = async (req: Request, res: Response, next: NextFunction) => {
             })
         } else {
             // 찜한 itemId와 item들을 mapping시키기
-            const likeItem: any = await exhibitionController.referenceOfExhibition(likes)
+            const likeItem: any = await exhibitionService.referenceOfExhibition(likes)
             if (likeItem === -1) {
                 res.status(501).json({
                     error: "itemId에 오류가 있습니다."
@@ -164,15 +126,15 @@ const likesList = async (req: Request, res: Response, next: NextFunction) => {
 const deleteAllLikesList = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId: number = parseInt(req.params.userId)
-        const info: any = await userInfoController.userFindOne(userId)
+        const info: any = await userInfoService.userFindOne(userId)
         // likeItemIds배열 저장
         const likes = info.likeItemIds
         // item 테이블에 각 itemId들에 likes를 -1하기
         for (let itemId = 0; itemId < likes.length; itemId++) {
-            await itemController.itemHeartFindUpdate(likes[itemId], { likes: -1 })
+            await itemService.itemHeartFindUpdate(likes[itemId], { likes: -1 })
         }
         // user 테이블에 likeItemIds를 빈 배열로 update
-        await userInfoController.userFindUpdate(userId, { likeItemIds: [] })
+        await userInfoService.userFindUpdate(userId, { likeItemIds: [] })
         res.status(200).json({
             result: "찜한 내역 모두 삭제 완료"
         })
@@ -188,8 +150,6 @@ const deleteAllLikesList = async (req: Request, res: Response, next: NextFunctio
 export default {
     getMyPaymentHistory,
     getDetailOfMyPaymentHistory,
-    findPaymentHistory,
-    checkStatus,
     likesList,
     deleteAllLikesList
 }
