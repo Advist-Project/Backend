@@ -7,7 +7,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const NaverStrategy = require('passport-naver').Strategy
 const KakaoStrategy = require('passport-kakao').Strategy
 
-module.exports = function (app) {
+export default function (passport: { serializeUser: (arg0: (user: IMongoDBUser, done: any) => any) => void; deserializeUser: (arg0: (id: string, done: any) => void) => void; use: (arg0: any) => void }) {
 
   //strategy에서 받은 정보들을 user에 입력 
   passport.serializeUser((user: IMongoDBUser, done: any) => {

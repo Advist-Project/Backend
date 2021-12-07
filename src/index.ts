@@ -1,60 +1,25 @@
 import express from "express"
-import cors from "cors"
-import mongoose from "mongoose"
-import config from "./config/config"
+import { connectMongoose } from "./mongoDB/database"
 import payRoutes from "./routes/pay"
 import itemRoutes from "./routes/item"
 import exhibitionRoutes from "./routes/exhibition"
 import myPageRoutes from "./routes/myPage"
 import adminRoutes from "./routes/admin"
-import userInfoRoutes from "./routes/userInfo"
 import session from 'express-session'
-import ConnectMongoDBSession from "connect-mongodb-session"
 import passportModule from 'passport'
+import config from "./config/config"
+import passportHandler from './controllers/user'
+import userRoutes from './routes/user'
 
-// cors 등록
 
 const app = express()
 app.use(express.json())
-
 app.set("trust proxy", 1)
-mongoose
-  .connect(config.mongo.url, config.mongo.options)
-  .then((result) => {
-    // console.log(result)
-    console.log("connected")
-  })
-  .catch((error) => {
-    console.log(error.message)
-  })
-
-//세션 저장을 위해 몽고db에 로그인
-const MongoDBStore = ConnectMongoDBSession(session)
-const mongoDBStore = new MongoDBStore({
-  uri: config.mongo.url,
-  databaseName: 'advist',
-  collection: "sessions"
-})
-
-mongoDBStore.on("error", () => {
-  // Error's here!
-})
+connectMongoose
 
 // cors 지정
-// app.use(cors({ origin: "https://frontend-git-develop-advi33.vercel.app", credentials: true }))
 app.use((req: any, res: any, next: any) => {
-  const corsWhitelist = [
-    'https://frontend-git-develop-advi33.vercel.app',
-    'https://frontend-git-ympark-advi33.vercel.app',
-    'https://localhost:3000',
-    'http://localhost:3000',
-    'https://advist.vercel.app',
-    'https://advist.kr',
-    'https://www.advist.kr',
-    'https://advist-admin.vercel.app',
-    'https://localhost:8081',
-    'http://localhost:8081'
-  ]
+  const corsWhitelist: string[] = config.corsWhitelist
   if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
     res.header('Access-Control-Allow-Origin', req.headers.origin)
     res.header('Access-Control-Allow-Credentials', true)
@@ -65,34 +30,13 @@ app.use((req: any, res: any, next: any) => {
 })
 
 //세션 설정
-app.use(
-  session({
-    secret: "secretcode",
-    // 모든 request마다 기존에 있던 session에 아무런 변경사항이 없을 시에도 그 session을 다시 저장하는 옵션
-    // (매 request 마다 세션을 계속 다시 저장하는 것)
-    resave: false,
-    // request가 들어오면 해당 request에서 새로 생성된 session에 아무런 작업이 이루어지지 않은 상황 
-    // false -> 아무런 작업이 이루워지지 않은 경우 저장 X
-    saveUninitialized: false,
-    store: mongoDBStore, //세션을 데이터베이스에 저장
-    cookie: {
-      sameSite: "none",
-      secure: true,
-      // 모든 범위에서 이 쿠키 사용 가능 "/"
-      // default일 경우 쿠키가 생성된 해당 페이지에서만 가능
-      path: "/",
-      maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
-    }
-  }))
+app.use(session(config.sessionConfig))
 
 //passport 실행
 app.use(passportModule.initialize())
 app.use(passportModule.session())
 
-
-//app을 인자로 보내서 passport를 return 값으로 받음
-var passport = require('./controllers/user')(app) // 받은 passport를 passort라는 변수에 저장
-var userRoutes = require('./routes/user')(passport) //import가 아닌 require 함수로 가져옴
+passportHandler(passportModule)
 
 app.get(
   "/",
