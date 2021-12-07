@@ -1,7 +1,8 @@
 import User from '../models/user'
 import { IMongoDBUser } from "../interfaces/user"
 import config from '../config/config'
-import getNextSequence from './counter'
+import passport from 'passport'
+import getNextSequence from '../service/counter'
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const NaverStrategy = require('passport-naver').Strategy
 const KakaoStrategy = require('passport-kakao').Strategy

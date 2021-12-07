@@ -1,22 +1,22 @@
 import { NextFunction, Request, Response } from "express"
-import getNextSequence from "./counter"
-import orderReceiptController from "./orderReceipt"
-import userInfoController from "./userInfo"
+import getNextSequence from "../service/counter"
+import orderReceiptService from "../service/orderReceipt"
+import userInfoService from "../service/userInfo"
 import review from "../models/review"
-import moment from "./moment"
+import moment from "../service/moment"
 
 // 후기 작성
 const makeReview = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let { orderId, score, good, bad, content } = req.body
         // orderReceipt하나 찾기
-        const order = await orderReceiptController.orderReciptFindOne(orderId)
+        const order = await orderReceiptService.orderReciptFindOne(orderId)
         if (order === undefined || order === null) {
             res.status(501).json({
                 message: "해당 orderId가 없는 id입니다."
             })
         } else {
-            const user = await userInfoController.userFindOne(order.userId)
+            const user = await userInfoService.userFindOne(order.userId)
             if (user === undefined || user === null) {
                 res.status(502).json({
                     message: "해당 orderId에 있는 userId는 없는 id입니다."
@@ -46,7 +46,7 @@ const makeReview = async (req: Request, res: Response, next: NextFunction) => {
                 })
                 console.log(newReiview)
                 await newReiview.save()
-                await orderReceiptController.orderReciptFindUpdate(orderId, { status: 4 })
+                await orderReceiptService.orderReciptFindUpdate(orderId, { status: 4 })
                 res.status(200).json({
                     result: "후기 저장 완료 & status = 4로 변경완료"
                 })

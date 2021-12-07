@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import _, { template } from "lodash"
-import orderReceipt from "../models/orderReceipt"
 import bootPay from "./bootPay"
-import mypageController from "./myPage"
-import orderReceiptController from "./orderReceipt"
-import getNextSequence from "./counter"
+import myPageService from "../service/myPage"
+import orderReceiptService from "../service/orderReceipt"
+import getNextSequence from "../service/counter"
+import adminService from "../service/admin"
 import Exhibition from "../models/exhibition"
 import Item from "../models/item"
 import User from "../models/user"
@@ -23,25 +23,10 @@ const getUserInfos = async (req: Request, res: Response, next: NextFunction) => 
     }
 }
 
-// 구매내역 불러오기
-const findAdminPaymentHistory = async () => {
-    try {
-        const paymentHistroy = await orderReceipt.find()
-            .sort({ "createdAt": -1 })
-        // 구매 내역이 없는 경우
-        if (_.isEmpty(paymentHistroy)) return -1
-        else return paymentHistroy
-    }
-    catch (error) {
-        console.log("findAdminPaymentHistory" + error.message)
-        return 0
-    }
-}
-
 // 구매내역
 const getAdminPaymentHistory = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const payment = await findAdminPaymentHistory()
+        const payment = await adminService.findAdminPaymentHistory()
         if (payment === 0) {
             res.status(501).json({
                 error: "orderReceipt를 찾는 로직에 문제가 생김"
@@ -63,7 +48,7 @@ const getAdminPaymentHistory = async (req: Request, res: Response, next: NextFun
                     "userEmail": payment[i]["userEmail"],
                     "userPhone": payment[i]["userPhone"] || "",
                     "payMethod": payment[i]["paymentInfo"]["method"] || "",
-                    "status": await mypageController.checkStatus(payment[i]["status"])
+                    "status": await myPageService.checkStatus(payment[i]["status"])
                 }
                 paymentHistroy[i] = history
             }
@@ -83,7 +68,7 @@ const getAdminPaymentHistory = async (req: Request, res: Response, next: NextFun
 const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const orderId: number = parseInt(req.params.orderId)
-        const payment = await orderReceiptController.orderReciptFindOne(orderId)
+        const payment = await orderReceiptService.orderReciptFindOne(orderId)
         if (payment === null || payment === undefined) {
             res.status(501).json({
                 error: "해당 orderId가 없습니다."
@@ -128,7 +113,7 @@ const getDetailOfAdminPaymentHistory = async (req: Request, res: Response, next:
 const refund = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let { orderId, reason } = req.body
-        const order = await orderReceiptController.orderReciptFindOne(orderId)
+        const order = await orderReceiptService.orderReciptFindOne(orderId)
         if (order === null || order === undefined) {
             res.status(501).json({
                 error: "해당 orderReceipt를 찾지 못했습니다"
@@ -264,4 +249,4 @@ const newProductDetailSave = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-export default { getUserInfos, getAdminPaymentHistory, getDetailOfAdminPaymentHistory, findAdminPaymentHistory, refund, newExhibitionSave, updateExhibition, updateProductDetail, newProductDetailSave }
+export default { getUserInfos, getAdminPaymentHistory, getDetailOfAdminPaymentHistory, refund, newExhibitionSave, updateExhibition, updateProductDetail, newProductDetailSave }

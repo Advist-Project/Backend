@@ -1,36 +1,14 @@
 import { NextFunction, Request, Response } from "express"
 import OrderReceipt from "../models/orderReceipt"
-import getNextSequence from "./counter"
+import getNextSequence from "../service/counter"
 import Item from "../models/item"
-import orderReceipt from "../models/orderReceipt"
-import userInfoController from "./userInfo"
-
-const orderReciptFindOne = async (id: number) => {
-  try {
-    return await orderReceipt.findOne(
-      { orderId: id })
-  }
-  catch (error) {
-    console.log("orderReciptFindOne" + error.message)
-  }
-}
-
-const orderReciptFindUpdate = async (id: number, param: any) => {
-  try {
-    await orderReceipt.findOneAndUpdate(
-      { orderId: id },
-      { $set: param },
-      { new: true })
-  }
-  catch (error) {
-    console.log("orderReciptFindUpdate" + error.message)
-  }
-}
+import userInfoService from "../service/userInfo"
+import orderReceiptService from "../service/orderReceipt"
 
 const checkOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: number = parseInt(req.params.userId)
-    const user: any = await userInfoController.userFindOne(userId)
+    const user: any = await userInfoService.userFindOne(userId)
     const userEmail: string = user.email
     const itemId: any = req.query.itemId
     const item: any = await Item.findOne({ itemId: itemId })
@@ -79,7 +57,7 @@ const saveCoachingDate = async (req: Request, res: Response, next: NextFunction)
     const userParam = {
       coachingDates: dates
     }
-    await orderReciptFindUpdate(orderId, userParam)
+    await orderReceiptService.orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
     })
@@ -97,7 +75,7 @@ const saveConsultationOfCoaching = async (req: Request, res: Response, next: Nex
     const userParam = {
       coachingContent: content
     }
-    await orderReciptFindUpdate(orderId, userParam)
+    await orderReceiptService.orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
     })
@@ -120,8 +98,8 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
       userName: userName,
       userPhone: userPhone
     }
-    await userInfoController.userFindUpdate(userId, user)
-    await orderReciptFindUpdate(orderId, userParam)
+    await userInfoService.userFindUpdate(userId, user)
+    await orderReceiptService.orderReciptFindUpdate(orderId, userParam)
     res.status(200).json({
       result: "save complete",
     })
@@ -136,7 +114,7 @@ const saveUserInfo = async (req: Request, res: Response, next: NextFunction) => 
 const completeOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const orderId: number = parseInt(req.params.orderId)
-    const orderList: any = await orderReciptFindOne(orderId)
+    const orderList: any = await orderReceiptService.orderReciptFindOne(orderId)
     res.status(200).json({
       order_receipts: orderList
     })
@@ -155,7 +133,7 @@ const afterCompleteOrder = async (req: Request, res: Response, next: NextFunctio
       status: 2
     }
     // 최종 완료
-    await orderReciptFindUpdate(orderId, param)
+    await orderReceiptService.orderReciptFindUpdate(orderId, param)
     console.log("successful update status")
     res.status(200).json({
       result: "success"
@@ -170,8 +148,6 @@ const afterCompleteOrder = async (req: Request, res: Response, next: NextFunctio
 
 export default
   {
-    orderReciptFindOne,
-    orderReciptFindUpdate,
     checkOrder,
     saveUserInfo,
     completeOrder,
