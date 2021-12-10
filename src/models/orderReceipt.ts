@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose"
 import OrderReceipt from "../interfaces/orderReceipt"
-import moment from "../service/moment"
+import moment from "../controllers/moment"
 
 const orderReceiptSchema: Schema = new Schema({
   orderId: Number,
