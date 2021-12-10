@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { IMongoDBUser } from '../interfaces/user'
-import moment from "../controllers/moment"
+import moment from "../service/moment"
 
 const user = new mongoose.Schema({
     googleId: {
