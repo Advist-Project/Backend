@@ -67,8 +67,8 @@ const corsWhitelist = [
     'https://localhost:3000',
     'http://localhost:3000',
     'https://advist.vercel.app',
-    'https://advist.kr',
-    'https://www.advist.kr',
+    'https://advist.co.kr',
+    'https://www.advist.co.kr',
     'https://advist-admin.vercel.app',
     'https://localhost:8081',
     'http://localhost:8081'

@@ -46,9 +46,9 @@ router.get('/auth/google/callback',
     if (!canPassOnboarding(req)) {
       console.log("값이 하나도 없습니다")
       // 로그인 온보딩 페이지 필요
-      res.redirect('https://www.advist.kr/onboarding')
+      res.redirect('https://www.advist.co.kr/onboarding')
     } else {
-      res.redirect("https://www.advist.kr/oauth")
+      res.redirect("https://www.advist.co.kr/oauth")
     }
 
   })
@@ -60,10 +60,10 @@ router.get('/auth/kakao/callback',
     if (!canPassOnboarding(req)) {
       console.log("값이 하나라도 없습니다")
       // 로그인 온보딩 페이지 필요
-      res.redirect('https://www.advist.kr/onboarding')
+      res.redirect('https://www.advist.co.kr/onboarding')
     } else {
       console.log("로그인 온보딩 값이 다 있습니다")
-      res.redirect("https://www.advist.kr/oauth")
+      res.redirect("https://www.advist.co.kr/oauth")
     }
 
   })
@@ -77,10 +77,10 @@ router.get('/auth/naver/callback',
     if (!canPassOnboarding(req)) {
       console.log("값이 하나라도 없습니다")
       // 로그인 온보딩 페이지 필요
-      res.redirect('https://www.advist.kr/onboarding')
+      res.redirect('https://www.advist.co.kr/onboarding')
     } else {
       console.log("로그인 온보딩 값이 다 있습니다")
-      res.redirect("https://www.advist.kr/oauth")
+      res.redirect("https://www.advist.co.kr/oauth")
     }
 
   })
