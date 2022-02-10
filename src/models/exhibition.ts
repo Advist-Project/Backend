@@ -1,14 +1,14 @@
 import mongoose, { Schema } from "mongoose"
 import Exhibition from "../interfaces/exhibition"
 let ExhibitionItemInfo: Exhibition["itemInfo"] = {
-    "itemId": undefined,
-    "title": undefined,
-    "label": undefined,
-    "likes": undefined,
-    "img": undefined,
-    "tag": undefined,
-    "price": undefined,
-    "discountPrice": undefined
+    "itemId": 0,
+    "title": "",
+    "label": "",
+    "likes": 0,
+    "img": "",
+    "tag": [""],
+    "price": 0,
+    "discountPrice": 0
 }
 const exhibitionSchema: Schema = new Schema({
     exhibitionId: { type: Number, required: true }, // 기본키값,
@@ -26,7 +26,7 @@ const exhibitionSchema: Schema = new Schema({
         //모든 정보 필요
     ],
     itemInfo: [
-        { type: ExhibitionItemInfo, required: false }
+        { ExhibitionItemInfo, required: false }
     ]
 })
 export default mongoose.model<Exhibition>("Exhibition", exhibitionSchema)
