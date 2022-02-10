@@ -4,6 +4,7 @@ import Exhibition from "../models/exhibition"
 import itemService from "./item"
 import moment from "../service/moment"
 import ExhibitionInterface from "../interfaces/exhibition"
+import itemController from "./item"
 
 const findFirstExhibition = Exhibition.findOne({ rank: 1 });
 
@@ -93,23 +94,14 @@ const referenceOfExhibitionAdmin = async (itemIds?: Array<number>) => {
     try {
         if (itemIds == undefined) return -1
         else {
-            const infoPromise = itemIds.map(async function (itemId: number): Promise<ExhibitionInterface["itemInfo"]> { //(object | null)[] 타입에서 Exhibition["itemInfo"] 타입으로 변경함); model에서 Exhibition이라는 이름을 써서 원래는 Exhibition["itemInfo"]인데 ExhibitionInterface["itemInfo"]가 되었습니다.
+            const infoPromise = itemIds.map(async function (itemId: number): Promise<object | null> {
                 const item = await Item.findOne({ itemId: itemId })
                 // 빈 값을 찾는다
                 if (_.isEmpty(item)) {
                     // 안그러면 undefine으로 값이 채워짐.-> map이라서
-                    return {
-                        "itemId": 0,
-                        "title": "",
-                        "label": "",
-                        "likes": 0,
-                        "img": "",
-                        "tag": [""],
-                        "price": 0,
-                        "discountPrice": 0
-                    }
+                    return {}
                 } else {
-                    const realOptions = await itemService.isOkOptionsAdmin(item?.options, itemId)
+                    const realOptions = await itemController.isOkOptionsAdmin(item?.options, itemId)
                     const itemInfo = {
                         "itemId": item?.itemId,
                         "title": item?.title,
@@ -119,21 +111,12 @@ const referenceOfExhibitionAdmin = async (itemIds?: Array<number>) => {
                         "tag": item?.tag,
                         "price": realOptions[0]["price"],
                         "discountPrice": realOptions[0]["discountPrice"]
-                    } as ExhibitionInterface["itemInfo"]
+                    }
                     return itemInfo
                 }
             })
-            // promise형식을 object 형식으로.. -> Exhibition["itemInfo"]형식으로
-            let infoJson: ExhibitionInterface["itemInfo"] = {
-                "itemId": 0,
-                "title": "",
-                "label": "",
-                "likes": 0,
-                "img": "",
-                "tag": [""],
-                "price": 0,
-                "discountPrice": 0
-            }
+            // promise형식을 object 형식으로..
+            let infoJson: Array<object | null> = []
             // itemInfo의 개수
             let cnt = 0
             // 추가되는 index

@@ -1,15 +1,6 @@
 import { Document } from 'mongoose'
 
-interface ExhibitionItemInfo {
-    itemId: number | undefined;
-    title: string | undefined;
-    label: string | undefined;
-    likes: number | undefined;
-    img: string | undefined;
-    tag: [string] | undefined;
-    price: any;
-    discountPrice: any;
-}
+
 export default interface Exhibition extends Document {
     exhibitionId: number, // 기본키값,
     title?: string, //기획전 이름,
@@ -25,5 +16,5 @@ export default interface Exhibition extends Document {
         //1, 2, 3
         //모든 정보 필요
     ],
-    itemInfo: ExhibitionItemInfo
+    itemInfo?: [object]
 }
