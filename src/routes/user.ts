@@ -52,7 +52,7 @@ router.get('/auth/google/callback',
     }
 
   })
-router.get('/auth/kakao', passport.authenticate('kakao', { scope: ['email', 'profile'] }))
+router.get('/auth/kakao', passport.authenticate('kakao', { scope: ['profile'] }))
 
 router.get('/auth/kakao/callback',
   passport.authenticate('kakao', { failureRedirect: '/user/login', session: true }),
