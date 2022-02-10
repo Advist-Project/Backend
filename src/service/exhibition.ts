@@ -99,14 +99,14 @@ const referenceOfExhibitionAdmin = async (itemIds?: Array<number>) => {
                 if (_.isEmpty(item)) {
                     // 안그러면 undefine으로 값이 채워짐.-> map이라서
                     return {
-                        "itemId": undefined,
-                        "title": undefined,
-                        "label": undefined,
-                        "likes": undefined,
-                        "img": undefined,
-                        "tag": undefined,
-                        "price": undefined,
-                        "discountPrice": undefined
+                        "itemId": 0,
+                        "title": "",
+                        "label": "",
+                        "likes": 0,
+                        "img": "",
+                        "tag": [""],
+                        "price": 0,
+                        "discountPrice": 0
                     }
                 } else {
                     const realOptions = await itemService.isOkOptionsAdmin(item?.options, itemId)
@@ -125,14 +125,14 @@ const referenceOfExhibitionAdmin = async (itemIds?: Array<number>) => {
             })
             // promise형식을 object 형식으로.. -> Exhibition["itemInfo"]형식으로
             let infoJson: ExhibitionInterface["itemInfo"] = {
-                "itemId": undefined,
-                "title": undefined,
-                "label": undefined,
-                "likes": undefined,
-                "img": undefined,
-                "tag": undefined,
-                "price": undefined,
-                "discountPrice": undefined
+                "itemId": 0,
+                "title": "",
+                "label": "",
+                "likes": 0,
+                "img": "",
+                "tag": [""],
+                "price": 0,
+                "discountPrice": 0
             }
             // itemInfo의 개수
             let cnt = 0
